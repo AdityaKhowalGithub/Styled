@@ -8,11 +8,13 @@ To run the project, navigate to the directory and run one of the following yarn 
 - yarn ios
 - yarn web
 
-If errors:
-Try yarn install / update
+# Common Errors:
+try doing npm install/ yarn add lolmao
+use npx expo --- not just expo install
 
-Rules
-Branches:
+# Rules
+## Branches:
+
 main: This branch is protected and requires merge request. Stand as where production code will live and will be use for deployment only. DO NOT PUSH TO THIS BRANCH
 
 staging: This branch is protected and requires merge request. Stand as where development code will live. DO NOT PUSH TO THIS BRANCH
