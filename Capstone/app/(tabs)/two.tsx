@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Camera } from 'expo-camera';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
@@ -8,8 +9,9 @@ export default function TabTwoScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Tab Two</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
+      <Camera style={{ width: 1080, height: 1920 }} type={Camera.Constants.Type.back} />
+
+      </View>
   );
 }
 
