@@ -1,29 +1,64 @@
-import { Camera } from 'expo-camera';
 import React, { useState, useEffect } from 'react';
-import { Button, Text } from 'react-native';
+import { View, Button, StyleSheet, Image } from 'react-native';
+import { Camera } from 'expo-camera';
 
-export default function CameraTab() {
-    const [hasPermission, setHasPermission] = useState(null);
+const CameraComponent = () => {
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [pictureUri, setPictureUri] = useState<string | null>(null);
 
-    useEffect(() => {
-        (async () => {
-            const { status } = await Camera.requestPermissionsAsync();
-            setHasPermission(status === 'granted');
-        })();
-    }, []);
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
 
-    if (hasPermission === null) {
-        return <Text>Requesting for camera permission</Text>;
+  const takePicture = async () => {
+    if (this.camera) {
+      let photo = await this.camera.takePictureAsync();
+      setPictureUri(photo.uri);
     }
+  };
 
-    if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
-    }
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <View><Text>No access to camera</Text></View>;
+  }
 
-    return (
-        <>
-            <Camera style={{ flex: 1 }} type={Camera.Constants.Type.back} />
-            <Button title="Take a picture" onPress={() => {}} />
-        </>
-    );
-}
+  return (
+    <View style={styles.container}>
+      <Camera style={styles.camera} type={type} ref={(ref) => { this.camera = ref; }}>
+        <View style={styles.buttonContainer}>
+          <Button title="Take Picture" onPress={() => takePicture()} />
+        </View>
+      </Camera>
+      {pictureUri && <Image source={{ uri: pictureUri }} style={styles.previewImage} />}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    margin: 20,
+    justifyContent: 'center',
+  },
+  previewImage: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+});
+
+export default CameraComponent;
