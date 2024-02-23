@@ -16,32 +16,18 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'rea
 // if (!firebase.apps.length) {
 //   firebase.initializeApp(firebaseConfig);
 // }
-
-const ProfileScreen = ({ userId }: { userId: string }) => {
-  // Define your state type here
-  const [profileData, setProfileData] = useState<null | {
-    name: string;
-    username: string;
-    bio: string;
-    profileImageUri: string;
-    lookbooks: { title: string; id: number }[];
-  }>(null);
+const ProfileScreen = ({ userId }) => {
+  // State to store profile data
+  const [profileData, setProfileData] = useState({
+    name: '',
+    username: '',
+    bio: '',
+    profileImageUri: '',
+    lookbooks: [],
+  });
 
   useEffect(() => {
-    // Here you would fetch data from Firebase
-    // For now, we're using dummy data
-    // const userRef = firebase.firestore().collection('users').doc(userId);
-    // userRef.get().then((doc) => {
-    //   if (doc.exists) {
-    //     setProfileData(doc.data());
-    //   } else {
-    //     console.log('No such user!');
-    //   }
-    // }).catch((error) => {
-    //   console.log('Error getting user:', error);
-    // });
-
-    // Dummy data for the example
+    // Dummy data for the profile
     const dummyData = {
       name: 'Jennifer Coolidge',
       username: 'jenniferlovespink',
@@ -49,19 +35,25 @@ const ProfileScreen = ({ userId }: { userId: string }) => {
       profileImageUri: '../assets/images/TestPFP.png', // Replace with actual image path
       lookbooks: [
         { title: 'Y2K', id: 1 },
+        { title: 'All pink', id: 2 },
+        { title: 'Going out', id: 3 },
+        { title: 'Comfy', id: 4 }
         // ... other lookbooks
       ],
     };
-    setProfileData(dummyData);
+    
+    // Simulating a fetch request with a timeout
+    setTimeout(() => {
+      setProfileData(dummyData);
+    }, 1000);
   }, [userId]);
 
-  if (!profileData) {
+  if (!profileData.name) {
     return <Text>Loading...</Text>;
   }
 
   return (
     <ScrollView style={styles.container}>
-          {/* Profile Header */}
       <View style={styles.headerContainer}>
         <Image
           style={styles.profileImage}
@@ -69,28 +61,24 @@ const ProfileScreen = ({ userId }: { userId: string }) => {
         />
         <Text style={styles.name}>{profileData.name}</Text>
         <Text style={styles.username}>@{profileData.username}</Text>
-        {/* Add other profile info here */}
       </View>
 
-      {/* Bio Section */}
       <View style={styles.bioContainer}>
         <Text style={styles.bioText}>{profileData.bio}</Text>
       </View>
 
-      {/* Lookbooks Section */}
       <View style={styles.lookbooksContainer}>
-        <Text style={styles.lookbooksTitle}>My Lookbooks</Text>
+        <Text style={styles.lookbooksTitleText}>My Lookbooks</Text>
         {profileData.lookbooks.map((lookbook) => (
-          <TouchableOpacity key={lookbook.id} style={styles.lookbooksTitle}>
+          <TouchableOpacity key={lookbook.id} style={styles.lookbookItem}>
             <Text>{lookbook.title}</Text>
           </TouchableOpacity>
         ))}
       </View>
-
-      {/* Implement other sections such as settings if needed */}
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -99,15 +87,19 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: 'center',
     padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
+    marginBottom: 10,
   },
   name: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#333',
   },
   username: {
     fontSize: 16,
@@ -118,15 +110,23 @@ const styles = StyleSheet.create({
   },
   bioText: {
     fontSize: 14,
-  },
-  italicText: {
     fontStyle: 'italic',
   },
   lookbooksContainer: {
-    // styles for lookbooks container
+    padding: 20,
   },
-  lookbooksTitle: {
-    // styles for lookbooks title
+  lookbooksTitleText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  lookbookItem: {
+    // Style for each lookbook item
+    padding: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
   },
   // Add more styles as needed
 });
