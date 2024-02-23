@@ -81,7 +81,7 @@ const ProfileScreen = ({ userId }: { userId: string }) => {
       <View style={styles.lookbooksContainer}>
         <Text style={styles.lookbooksTitle}>My Lookbooks</Text>
         {profileData.lookbooks.map((lookbook) => (
-          <TouchableOpacity key={lookbook.id} style={styles.lookbookItem}>
+          <TouchableOpacity key={lookbook.id} style={styles.lookbooksTitle}>
             <Text>{lookbook.title}</Text>
           </TouchableOpacity>
         ))}
