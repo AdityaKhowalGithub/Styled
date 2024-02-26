@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Button } from 'react-native';
+import { Text, TouchableOpacity, TextInput, StyleSheet, Button } from 'react-native';
 import { Camera } from 'expo-camera';
-
+import { View } from '@/components/Themed';
 const AddPieceScreen = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
@@ -123,4 +123,108 @@ const styles = StyleSheet.create({
 });
 
 export default AddPieceScreen;
+// import React, { useState, useEffect, useRef } from 'react';
+// import { Alert, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+// import { Camera } from 'expo-camera';
+// import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+// // This would be your AddPieceScreen component
+// const AddPieceScreen = () => {
+//   const [hasPermission, setHasPermission] = useState(null);
+//   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+//   const isFocused = useIsFocused(); // We use this to know when the tab is focused
+//   const navigation = useNavigation();
+//   const route = useRoute();
+//   const cameraRef = useRef(null);
+
+//   // Ask for camera permission
+//   useEffect(() => {
+//     (async () => {
+//       const { status } = await Camera.requestCameraPermissionsAsync();
+//       setHasPermission(status === 'granted');
+//     })();
+//   }, []);
+
+//   useEffect(() => {
+//     if (isFocused && hasUnsavedChanges) {
+//       const discardChanges = () => {
+//         setHasUnsavedChanges(false);
+//         // Here you would reset the state of your component as necessary
+//       };
+
+//       Alert.alert(
+//         "Discard changes?",
+//         "Are you sure you want to discard this piece without saving?",
+//         [
+//           { text: "Don't leave", style: 'cancel', onPress: () => {} },
+//           { text: 'Discard', style: 'destructive', onPress: discardChanges },
+//         ]
+//       );
+//     }
+//   }, [isFocused, hasUnsavedChanges]);
+
+//   if (hasPermission === null) {
+//     return <View />;
+//   }
+//   if (hasPermission === false) {
+//     return <Text>No access to camera</Text>;
+//   }
+
+//   // Function to handle taking a picture
+//   const handleTakePicture = async () => {
+//     if (cameraRef.current) {
+//       const photo = await cameraRef.current.takePictureAsync();
+//       console.log(photo);
+//       setHasUnsavedChanges(true); // We now have an unsaved photo
+//       // Process the photo as necessary
+//     }
+//   };
+
+//   return (
+//     <View style={{ flex: 1 }}>
+//       <Camera ref={cameraRef} style={styles.camera}>
+//         <TouchableOpacity style={styles.button} onPress={handleTakePicture}>
+//           <Text style={styles.text}>Take Picture</Text>
+//         </TouchableOpacity>
+//       </Camera>
+//     </View>
+//   );
+// };
+
+// // Tab navigator setup
+// const Tab = createBottomTabNavigator();
+
+// // Main component that includes the tab navigator
+// const MainComponent = () => {
+//   return (
+//     <Tab.Navigator>
+//       {/* Other tabs */}
+//       <Tab.Screen name="Add" component={AddPieceScreen} />
+//       {/* Other tabs */}
+//     </Tab.Navigator>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   camera: {
+//     flex: 1,
+//     justifyContent: 'flex-end',
+//     alignItems: 'center',
+//   },
+//   button: {
+//     flex: 0.1,
+//     alignSelf: 'flex-end',
+//     alignItems: 'center',
+//     backgroundColor: 'white',
+//     marginBottom: 20,
+//     padding: 10,
+//     borderRadius: 5,
+//   },
+//   text: {
+//     fontSize: 18,
+//     color: 'black',
+//   },
+// });
+
+// export default MainComponent;
