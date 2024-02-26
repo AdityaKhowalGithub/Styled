@@ -6,12 +6,19 @@ interface TabIconProps {
     color: string;
 }
 
+// const HomeIcon = ({ color }: { color: string }) => (
+//   <Svg width="25" height="24" viewBox="0 0 25 24" fill="none">
+//   <Path d="M9.91999 2.83992L4.52999 7.03992C3.62999 7.73992 2.89999 9.22992 2.89999 10.3599V17.7699C2.89999 20.0899 4.78999 21.9899 7.10999 21.9899H18.69C21.01 21.9899 22.9 20.0899 22.9 17.7799V10.4999C22.9 9.28992 22.09 7.73992 21.1 7.04992L14.92 2.71992C13.52 1.73992 11.27 1.78992 9.91999 2.83992Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+//   <Path d="M12.9 17.99V14.99" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+// </Svg>
+
+// );
+
 const HomeIcon = ({ color }: { color: string }) => (
   <Svg width="25" height="24" viewBox="0 0 25 24" fill="none">
-  <Path d="M9.91999 2.83992L4.52999 7.03992C3.62999 7.73992 2.89999 9.22992 2.89999 10.3599V17.7699C2.89999 20.0899 4.78999 21.9899 7.10999 21.9899H18.69C21.01 21.9899 22.9 20.0899 22.9 17.7799V10.4999C22.9 9.28992 22.09 7.73992 21.1 7.04992L14.92 2.71992C13.52 1.73992 11.27 1.78992 9.91999 2.83992Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  <Path d="M12.9 17.99V14.99" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-</Svg>
-
+    <Path d="M9.91999 2.83992L4.52999 7.03992C3.62999 7.73992 2.89999 9.22992 2.89999 10.3599V17.7699C2.89999 20.0899 4.78999 21.9899 7.10999 21.9899H18.69C21.01 21.9899 22.9 20.0899 22.9 17.7799V10.4999C22.9 9.28992 22.09 7.73992 21.1 7.04992L14.92 2.71992C13.52 1.73992 11.27 1.78992 9.91999 2.83992Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <Path d="M12.9 17.99V14.99" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </Svg>
 );
 const CommunitiesIcon = ({ color }: { color: string }) => (
   <Svg
