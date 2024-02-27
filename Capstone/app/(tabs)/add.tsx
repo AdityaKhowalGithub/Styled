@@ -190,13 +190,26 @@ const AddPieceScreen = () => {
           </View>
         </ScrollView>
       ) : (
+        // <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef}>
+        //   <View style={styles.buttonContainer}>
+        //     <TouchableOpacity style={styles.button} onPress={handleTakePicture}>
+        //       <Text style={styles.text}> Take Photo </Text>
+        //     </TouchableOpacity>
+        //   </View>
+        // </Camera>
         <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={handleTakePicture}>
-              <Text style={styles.text}> Take Photo </Text>
-            </TouchableOpacity>
-          </View>
-        </Camera>
+  <View style={styles.overlay}>
+    <View style={styles.overlayBox} />
+    <Text style={styles.instructionsText}>Make sure your piece is within this box!</Text>
+  </View>
+  <View style={styles.buttonContainer}>
+    <TouchableOpacity style={styles.button} onPress={handleTakePicture}>
+      <Text style={styles.text}>Take Photo</Text>
+    </TouchableOpacity>
+  </View>
+</Camera>
+
+    
       )}
     </View>
   );
@@ -205,25 +218,74 @@ const AddPieceScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'black', // Usually camera screen has a black background
   },
   camera: {
     flex: 1,
+    justifyContent: 'space-between', // This will allow you to position elements at the top and bottom of the screen
   },
   buttonContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
     flexDirection: 'row',
-    margin: 20,
+    justifyContent: 'center', // This centers the button on the screen
+    marginBottom: 20, // Assuming the button is at the bottom
   },
   button: {
-    flex: 0.1,
-    alignSelf: 'flex-end',
+    width: 70, // A typical size for a camera button
+    height: 70, // A typical size for a camera button
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff', // Camera button is usually white
+    borderRadius: 35, // This will make it round
   },
   text: {
     fontSize: 18,
-    color: 'white',
+    color: 'black', // Text is usually black on a white button
   },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  overlayBox: {
+    width: '90%',
+    height: '80%',
+    borderWidth: 2,
+    borderColor: 'white',
+    backgroundColor: 'transparent',
+  },
+  instructionsText: {
+    position: 'absolute',
+    top: '50%', // Center vertically
+    alignSelf: 'center', // Center horizontally
+    color: 'white',
+    textAlign: 'center',
+    paddingHorizontal: 20, // Make sure the text doesn't touch the sides
+  },
+  // container: {
+  //   flex: 1,
+  // },
+  // camera: {
+  //   flex: 1,
+  // },
+  // buttonContainer: {
+  //   flex: 1,
+  //   backgroundColor: 'transparent',
+  //   flexDirection: 'row',
+  //   margin: 20,
+  // },
+  // button: {
+  //   flex: 0.1,
+  //   alignSelf: 'flex-end',
+  //   alignItems: 'center',
+  // },
+  // text: {
+  //   fontSize: 18,
+  //   color: 'white',
+  // },
   scrollView: {
     flex: 1,
     backgroundColor: '#fff',
