@@ -1,128 +1,3 @@
-import React, { useState, useRef } from 'react';
-import { Text, TouchableOpacity, TextInput, StyleSheet, Button } from 'react-native';
-import { Camera } from 'expo-camera';
-import { View } from '@/components/Themed';
-const AddPieceScreen = () => {
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const [imageUri, setImageUri] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [form, setForm] = useState({ type: '', size: '', brand: '', acquisition: '', date: '' });
-  const cameraRef = useRef<Camera | null>(null);
-
-  const askForCameraPermission = async () => {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    setHasPermission(status === 'granted');
-  };
-
-  // Call this function when the component is mounted
-  React.useEffect(() => {
-    askForCameraPermission();
-  }, []);
-
-  const takePicture = async () => {
-    if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync();
-      setImageUri(photo.uri);
-      setIsProcessing(true);
-      // Simulate image processing delay
-      setTimeout(() => {
-        setIsProcessing(false);
-      }, 2000);
-    }
-  };
-
-  const renderCameraView = () => (
-    <View style={styles.cameraContainer}>
-      <Camera style={styles.camera} type={type} ref={cameraRef}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={takePicture}>
-            <Text style={styles.text}>Snap</Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
-    </View>
-  );
-
-  const renderProcessingView = () => (
-    <View style={styles.processingContainer}>
-      <Text>Cropping your image...</Text>
-      {/* Show a progress bar or an activity indicator */}
-    </View>
-  );
-
-  const renderFormView = () => (
-    <View style={styles.formContainer}>
-      {/* Form fields and a button to submit */}
-      <TextInput
-        style={styles.input}
-        placeholder="Type"
-        value={form.type}
-        onChangeText={(text) => setForm({ ...form, type: text })}
-      />
-      {/* Other form fields */}
-      <Button title="Add Piece" onPress={() => {}} />
-    </View>
-  );
-
-  if (hasPermission === null) {
-    return <View />;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
-
-  return (
-    <View style={{ flex: 1 }}>
-      {!imageUri && !isProcessing && renderCameraView()}
-      {isProcessing && renderProcessingView()}
-      {imageUri && !isProcessing && renderFormView()}
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  // Add styles here
-  cameraContainer: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
-    margin: 20,
-  },
-  button: {
-    flex: 0.1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 18,
-    color: 'white',
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
-  formContainer: {
-    padding: 15,
-  },
-  processingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  // Add more styles as needed
-});
-
-export default AddPieceScreen;
 // import React, { useState, useEffect, useRef } from 'react';
 // import { Alert, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 // import { Camera } from 'expo-camera';
@@ -228,3 +103,174 @@ export default AddPieceScreen;
 // });
 
 // export default MainComponent;
+import React, { useState, useEffect, useRef } from 'react';
+import { Alert, View, Text, TouchableOpacity, Image, TextInput, StyleSheet, ScrollView } from 'react-native';
+import { Camera } from 'expo-camera';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+
+const AddPieceScreen = () => {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState('');
+  const [size, setSize] = useState('');
+  const [brand, setBrand] = useState('');
+  const [photo, setPhoto] = useState(null);
+  const cameraRef = useRef(null);
+  const navigation = useNavigation();
+
+  // Request camera permissions
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+
+  const handleTakePicture = async () => {
+    if (cameraRef.current) {
+      const options = { quality: 0.5, base64: true, skipProcessing: true };
+      const data = await cameraRef.current.takePictureAsync(options);
+      setPhoto(data);
+      // Navigate to another screen or update state here if needed
+    }
+  };
+  const handleRetakePicture = () => {
+    setPhoto(null);
+  };
+  const handleSavePiece = () => {
+    // Save the piece to your state or backend
+    alert('Piece saved!');
+    // Reset the state and navigate if necessary
+    setType('');
+    setSize('');
+    setBrand('');
+    setPhoto(null);
+  };
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  return (
+    <View style={styles.container}>
+      {photo ? (
+        <ScrollView style={styles.scrollView}>
+          <Image source={{ uri: photo.uri }} style={styles.previewImage} />
+          <View style={styles.formContainer}>
+            <Text style={styles.label}>Type</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter type of piece"
+              value={type}
+              onChangeText={setType}
+            />
+            <Text style={styles.label}>Size</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter size"
+              value={size}
+              onChangeText={setSize}
+            />
+            <Text style={styles.label}>Brand</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter brand"
+              value={brand}
+              onChangeText={setBrand}
+            />
+            {/* Add additional input fields as necessary */}
+            <TouchableOpacity style={styles.saveButton} onPress={handleSavePiece}>
+              <Text style={styles.saveButtonText}>Save Piece</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.retakeButton} onPress={handleRetakePicture}>
+              <Text style={styles.retakeButtonText}>Retake Picture</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      ) : (
+        <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={handleTakePicture}>
+              <Text style={styles.text}> Take Photo </Text>
+            </TouchableOpacity>
+          </View>
+        </Camera>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    margin: 20,
+  },
+  button: {
+    flex: 0.1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 18,
+    color: 'white',
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  previewImage: {
+    width: '100%',
+    height: 300,
+    resizeMode: 'contain',
+  },
+  formContainer: {
+    padding: 20,
+  },
+  label: {
+    fontSize: 16,
+    color: 'black',
+    marginBottom: 10,
+  },
+  input: {
+    fontSize: 18,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    padding: 10,
+    borderRadius: 5,
+    color: 'black',
+  },
+  saveButton: {
+    backgroundColor: 'blue',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  saveButtonText: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  retakeButton: {
+    backgroundColor: 'red',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10, // Add some margin at the top if needed
+  },
+  retakeButtonText: {
+    fontSize: 18,
+    color: '#fff',
+  },
+});
+
+export default AddPieceScreen;
