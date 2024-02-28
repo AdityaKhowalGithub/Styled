@@ -1,9 +1,14 @@
-import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
-
+import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import React from 'react';
 
 export default function TabOneScreen() {
+  const navigation = useNavigation();
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
   return (
     <SafeAreaView 
 	style = {{
@@ -163,14 +168,34 @@ export default function TabOneScreen() {
 					borderRadius: 5,
 					paddingVertical: 9,
 				}}>
-				
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              alignSelf: "stretch",
+              alignItems: "center", // Align text in the center horizontally
+              justifyContent: "center", // Align text in the center vertically
+            }}
+            onPress={() => {
+              navigation.navigate('add' );
+            }}
+          >
+            <Text
+              style={{
+                color: "#FFFFFF",
+                fontSize: 13,
+              }}
+            >
+              {"add a piece"}
+            </Text>
+          </TouchableOpacity>
+{/* 				
 				<Text 
 					style = {{
 						color: "#FFFFFF",
 						fontSize: 13,
 					}}>
 					{"add a piece"}
-				</Text>
+				</Text> */}
 			</View>
 			<View 
 				style = {{
