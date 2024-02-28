@@ -2,8 +2,14 @@ import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import {useNavigation } from '@react-navigation/native';
+import React from 'react';
 
 export default function TabOneScreen() {
+  const navigation = useNavigation();
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
   return (
     <SafeAreaView 
 	style = {{
@@ -29,14 +35,7 @@ export default function TabOneScreen() {
 					marginBottom: 25,
 					marginLeft: 32,
 				}}>
-				<Text 
-					style = {{
-						color: "#000000",
-						fontSize: 17,
-						marginRight: 9,
-					}}>
-					{"9:41"}
-				</Text>
+				
 				
 				<View 
 					style = {{
