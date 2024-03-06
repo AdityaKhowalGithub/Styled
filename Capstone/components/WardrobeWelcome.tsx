@@ -13,18 +13,18 @@ const WelcomeSection: React.FC = () => (
 const styles = StyleSheet.create({
   welcomeSection: {
     backgroundColor: "#FFF8ED",
+  },
+  welcomeText: {
+    color: "#000",
 
     paddingVertical: 21,
     paddingRight: 18,
     marginBottom: 14,
     marginLeft: 32,
-  },
-  welcomeText: {
-    color: "#000",
     fontSize: 22,
-    marginBottom: 16,
-    marginLeft: -12, // Adjust based on marginLeft of parent
-    width: 352,
+    height: 100,
+    marginTop: 20,
+    // width: 352,
   },
 });
 

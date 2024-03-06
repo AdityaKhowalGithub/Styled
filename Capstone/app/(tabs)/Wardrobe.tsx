@@ -1,38 +1,65 @@
+import Button from "@/components/Button"; // Adjust the path as necessary
+import HorizontalScrollView from "@/components/HorizontalView";
+import SummaryContainer from "@/components/SummaryContainer"; // Adjust the path as necessary
+import { Text, View } from "@/components/Themed";
+import WelcomeSection from "@/components/WardrobeWelcome"; // Adjust the path as necessary
+import wardrobeItems from "@/components/wardrobe_items.json";
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  Modal,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import EditScreenInfo from "@/components/EditScreenInfo";
-import { Text, View } from "@/components/Themed";
-import React, { useState } from "react";
-import Button from "@/components/Button"; // Adjust the path as necessary
-import WelcomeSection from "@/components/WardrobeWelcome"; // Adjust the path as necessary
-import SummaryContainer from "@/components/SummaryContainer"; // Adjust the path as necessary
-import HorizontalScrollView from "@/components/HorizontalView";
-import wardrobeItems from "@/components/wardrobe_items.json";
-import MyWardrobeScreen from "@/components/expandWardrobe";
+
+const MyModal: React.FC<{ visible: boolean; onClose: () => void }> = ({
+  visible,
+  onClose,
+}) => {
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>This is my modal!</Text>
+          <TouchableOpacity
+            style={[styles.button, styles.buttonClose]}
+            onPress={onClose}
+          >
+            <Text style={styles.textStyle}>Hide Modal</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
 
 export default function TabOneScreen() {
   const navigation = useNavigation();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   React.useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
+        <MyModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />
         <WelcomeSection />
         <SummaryContainer />
         <View style={styles.wardrobeHeader}>
-          <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
-            {/* onPress={() => navigation.navigate('MyWardrobeScreen)} */}
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Text style={styles.wardrobeHeaderText}>{"My Wardrobe"}</Text>
           </TouchableOpacity>
         </View>
-        {isExpanded && <HorizontalScrollView items={wardrobeItems} />}
         <View style={styles.buttonRow}>
           <Button
             title="add a piece"
@@ -99,6 +126,27 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     marginHorizontal: 23,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   pieceDetailText: {
     color: "#000",
     fontSize: 15,
@@ -151,5 +199,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 12,
     marginHorizontal: 18,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
