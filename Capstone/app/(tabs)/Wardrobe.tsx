@@ -13,32 +13,7 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
-
-const MyModal: React.FC<{ visible: boolean; onClose: () => void }> = ({
-  visible,
-  onClose,
-}) => {
-  return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      animationType="slide"
-      onRequestClose={onClose}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>This is my modal!</Text>
-          <TouchableOpacity
-            style={[styles.button, styles.buttonClose]}
-            onPress={onClose}
-          >
-            <Text style={styles.textStyle}>Hide Modal</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
-  );
-};
+import MyModal from "@/components/WardrobeModel";
 
 export default function TabOneScreen() {
   const navigation = useNavigation();
@@ -52,7 +27,9 @@ export default function TabOneScreen() {
         <MyModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
+          items={wardrobeItems} // Pass wardrobeItems as props here
         />
+
         <WelcomeSection />
         <SummaryContainer />
         <View style={styles.wardrobeHeader}>
@@ -76,7 +53,7 @@ export default function TabOneScreen() {
 
         <View style={styles.buttonRow}>
           <View style={styles.wardrobeHeader}>
-            <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
+            <TouchableOpacity>
               {/* onPress={() => navigation.navigate('MyWardrobeScreen)} */}
               <Text style={styles.wardrobeHeaderText}>{"My Lookbooks"}</Text>
             </TouchableOpacity>

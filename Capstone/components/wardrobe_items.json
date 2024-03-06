@@ -1,26 +1,30 @@
 [
-    {
-      "Item Number": "1",
-      "Image Filename": "Capstone/components/Project/Rectangle 183.png"
-    },
-    {
-      "Item Number": "2",
-      "Image Filename": "Capstone/components/Project/Rectangle 184.png"
-    },
-    {
-      "Item Number": "3",
-      "Image Filename": "Capstone/components/Project/Rectangle 185.png"
-    },
-    {
-      "Item Number": "4",
-      "Image Filename": "jeans2.png"
-    },
-    {
-      "Item Number": "5",
-      "Image Filename": "dress1.png"
-    },
-    {
-      "Item Number": "6",
-      "Image Filename": "shoes1.png"
-    }
-  ]
+  {
+    "name": "1",
+    "image": "@/assets/images/Rectangle1.png"
+  },
+  {
+    "name": "2",
+    "image": "@/assets/images/Rectangle2.png"
+  },
+  {
+    "name": "3",
+    "image": "@/assets/images/Rectangle3.png"
+  },
+  {
+    "name": "4",
+    "image": "@/assets/images/Rectangle1.png"
+  },
+  {
+    "name": "5",
+    "image": "@/assets/images/Rectangle2.png"
+  },
+  {
+    "name": "6",
+    "image": "@/assets/images/Rectangle3.png"
+  },
+  {
+    "name": "7",
+    "image": "@/assets/images/Rectangle3.png"
+  }
+]
