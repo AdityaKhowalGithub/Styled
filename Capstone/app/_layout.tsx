@@ -4,7 +4,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-
+import MyWardrobeScreen from '@/components/expandWardrobe';
 import { useColorScheme } from '@/components/useColorScheme';
 
 export {
@@ -52,6 +52,9 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        {/* <Stack.Screen name="MyWardrobeScreen" options={{ headerShown: true }}>
+  {() => <MyWardrobeScreen />}
+</Stack.Screen> */}
       </Stack>
     </ThemeProvider>
   );

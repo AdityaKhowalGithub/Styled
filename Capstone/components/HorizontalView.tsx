@@ -1,18 +1,20 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, Image } from 'react-native';
 
 // Define the props interface
 interface MyScrollViewProps {
-  number: number;
+  items: Array<{ "Item Number": string; "Image Filename": string; }>;
 }
 
-const HorizontalScrollView: React.FC<MyScrollViewProps> = ({ number }) => {
-  // Generate an array with 'number' elements, using the index as a key
-  const views = Array.from({ length: number }, (_, index) => (
+const HorizontalScrollView: React.FC<MyScrollViewProps> = ({ items }) => {
+  // Generate views based on the items prop
+  const views = items.map((item, index) => (
     <View
       key={index.toString()} // Convert index to string for the key
       style={styles.viewStyle}
-    />
+    >
+      <Image source={{ uri: item["Image Filename"] }} style={{ width: '100%', height: '100%' }} resizeMode="contain" />
+    </View>
   ));
 
   return (
