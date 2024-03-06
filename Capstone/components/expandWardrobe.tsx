@@ -1,17 +1,12 @@
-import React from 'react';
-import { View, Text, Button } from 'react-native';
-import HorizontalScrollView from '@/components/HorizontalView';
-import wardrobeItems from '@/components/wardrobe_items.json';
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation
+// In MyWardrobeScreen.tsx or similar
+import React from "react";
+import { View, Text } from "react-native";
 
-const MyWardrobeScreen: React.FC = () => {
-  const navigation = useNavigation(); // Initialize navigation
-
+const MyWardrobeScreen = () => {
+  // Component definition
   return (
     <View>
-      <Button title="Back" onPress={() => navigation.navigate('Wardrobe')} /> {/* Add this line for the back button */}
-      <Text>My Wardrobe</Text>
-      <HorizontalScrollView items={wardrobeItems} />
+      <Text>My Wardrobe Screen</Text>
     </View>
   );
 };
