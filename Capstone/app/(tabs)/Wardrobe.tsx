@@ -3,247 +3,40 @@ import { useNavigation } from '@react-navigation/native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import React from 'react';
+import Button from '@/components/Button'; // Adjust the path as necessary
+import WelcomeSection from '@/components/WardrobeWelcome'; // Adjust the path as necessary
+import SummaryContainer from '@/components/SummaryContainer'; // Adjust the path as necessary
+import HorizontalScrollView from '@/components/HorizontalView';
 
 export default function TabOneScreen() {
+  
   const navigation = useNavigation();
   React.useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: "#FFFFFF",
-      }}>
-      <ScrollView
-        style={{
-          flex: 1,
-          backgroundColor: "#FFFFFF",
-        }}>
-        <View
-          style={{
-            backgroundColor: "#FFF8ED",
-            paddingVertical: 21,
-            paddingRight: 18,
-            marginBottom: 14,
-          }}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 25,
-              marginLeft: 32,
-            }}>
-         
+    <SafeAreaView style={styles.container}>
+    <ScrollView style={styles.container}>
+      <WelcomeSection />
+      <SummaryContainer />
+      <View style={styles.wardrobeHeader}>
+        <Text style={styles.wardrobeHeaderText}>{"My Wardrobe"}</Text>
+      </View>
+      <View style={styles.buttonRow}>
+        <Button
+          title="add a piece"
+          onPress={() => navigation.navigate('AddPiece')} // Update the navigate function as needed
+          backgroundColor="#A86154"
+        />
+        <Button
+          title="add an outfit"
+          onPress={() => console.log('Add outfit')} // Implement or update onPress as needed
+          backgroundColor="#A4763B"
+        />
+      </View>
+    <HorizontalScrollView number={10} />
 
-            <View
-              style={{
-                flex: 1,
-                alignSelf: "stretch",
-              }}>
-            </View>
-
-
-          </View>
-          <Text
-            style={{
-              color: "#000000",
-              fontSize: 22,
-              marginBottom: 16,
-              marginLeft: 20,
-              width: 352,
-            }}>
-            {"Welcome to your digital closet, \nJohn Doe"}
-          </Text>
-          <View
-            style={{
-              backgroundColor: "#FFFFFF",
-              borderRadius: 12,
-              paddingTop: 35,
-              paddingBottom: 24,
-              marginLeft: 22,
-            }}>
-            <Text
-              style={{
-                color: "#000000",
-                fontSize: 18,
-                marginBottom: 16,
-                marginHorizontal: 23,
-              }}>
-              {"You have 40 total pieces."}
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 9,
-                marginHorizontal: 33,
-              }}>
-
-              <View
-                style={{
-                  flex: 1,
-                  alignSelf: "stretch",
-                }}>
-              </View>
-
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginHorizontal: 7,
-              }}>
-              <Text
-                style={{
-                  color: "#000000",
-                  fontSize: 15,
-                }}>
-                {"20 tops"}
-              </Text>
-              <Text
-                style={{
-                  color: "#000000",
-                  fontSize: 15,
-                }}>
-                {"20 bottoms"}
-              </Text>
-              <Text
-                style={{
-                  color: "#000000",
-                  fontSize: 15,
-                }}>
-                {"10 dresses"}
-              </Text>
-              <Text
-                style={{
-                  color: "#000000",
-                  fontSize: 15,
-                }}>
-                {"5 shoes"}
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 12,
-            marginHorizontal: 23,
-          }}>
-          <Text
-            style={{
-              color: "#684440",
-              fontSize: 18,
-              marginRight: 16,
-            }}>
-            {"My Wardrobe"}
-          </Text>
-
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 12,
-            marginHorizontal: 18,
-          }}>
-          <View
-            style={{
-              width: 166,
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#A86154",
-              borderRadius: 5,
-              paddingVertical: 9,
-            }}>
-            <TouchableOpacity
-              style={{
-                flex: 1,
-                alignSelf: "stretch",
-                alignItems: "center", // Align text in the center horizontally
-                justifyContent: "center", // Align text in the center vertically
-              }}
-              onPress={() => {
-                navigation.navigate('add');
-              }}
-            >
-              <Text
-                style={{
-                  color: "#FFFFFF",
-                  fontSize: 13,
-                }}
-              >
-                {"add a piece"}
-              </Text>
-            </TouchableOpacity>
-            {/* 				
-				<Text 
-					style = {{
-						color: "#FFFFFF",
-						fontSize: 13,
-					}}>
-					{"add a piece"}
-				</Text> */}
-          </View>
-          <View
-            style={{
-              width: 166,
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#A4763B",
-              borderRadius: 5,
-              paddingVertical: 9,
-            }}>
-
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontSize: 13,
-              }}>
-              {"add an outfit"}
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 8,
-            marginHorizontal: 18,
-          }}>
-          <View
-            style={{
-              width: 107,
-              height: 140,
-              backgroundColor: "#D9D9D9",
-              borderRadius: 8,
-            }}>
-          </View>
-          <View
-            style={{
-              width: 106,
-              height: 140,
-              backgroundColor: "#D9D9D9",
-              borderRadius: 8,
-            }}>
-          </View>
-          <View
-            style={{
-              width: 107,
-              height: 140,
-              backgroundColor: "#D9D9D9",
-              borderRadius: 8,
-            }}>
-          </View>
-        </View>
-        <View
+        {/* <View
           style={{
             backgroundColor: "#C4C4C4",
             borderRadius: 2,
@@ -307,7 +100,7 @@ export default function TabOneScreen() {
               </Text>
             </View>
           </View>
-        </View>
+        </View> 
         <View
           style={{
             flexDirection: "row",
@@ -570,7 +363,7 @@ export default function TabOneScreen() {
               borderRadius: 2,
             }}>
           </View>
-        </View>
+        </View>*/}
 
 
 
@@ -582,18 +375,91 @@ export default function TabOneScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+
+    container: {
+      flex: 1,
+      backgroundColor: "#FFFFFF",
+    },
+    headerContainer: {
+      backgroundColor: "#FFF8ED",
+      paddingVertical: 21,
+      paddingRight: 18,
+      marginBottom: 14,
+      marginLeft: 32,
+    },
+    headerText: {
+      color: "#000",
+      fontSize: 22,
+      marginBottom: 16,
+      marginLeft: -12, // Adjusted to align text properly
+    },
+    totalPiecesContainer: {
+      backgroundColor: "#FFFFFF",
+      borderRadius: 12,
+      paddingTop: 35,
+      paddingBottom: 24,
+      marginLeft: -10, // Adjusted for alignment
+      marginHorizontal: 22,
+    },
+    totalPiecesText: {
+      color: "#000",
+      fontSize: 18,
+      marginBottom: 16,
+      marginHorizontal: 23,
+    },
+    pieceDetailText: {
+      color: "#000",
+      fontSize: 15,
+      marginHorizontal: 7,
+    },
+    wardrobeTitleContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 12,
+      marginHorizontal: 23,
+    },
+    wardrobeTitleText: {
+      color: "#684440",
+      fontSize: 18,
+      marginRight: 16,
+    },
+    buttonGroup: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 12,
+      marginHorizontal: 18,
+    },
+    buttonBase: {
+      width: 166,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 5,
+      paddingVertical: 9,
+    },
+    buttonText: {
+      color: "#FFFFFF",
+      fontSize: 13,
+    },
+    wardrobeHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 12,
+      marginHorizontal: 23,
+    },
+    wardrobeHeaderText: {
+      color: "#684440",
+      fontSize: 18,
+      marginRight: 16,
+    },
+    buttonRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 12,
+      marginHorizontal: 18,
+    },
+  });
+    
+
