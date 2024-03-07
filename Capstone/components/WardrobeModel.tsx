@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Image,
 } from "react-native";
 import wardrobeCategories from '../assets/wardrobeItems.json';
 
@@ -20,7 +21,23 @@ const WardrobeModal: React.FC<WardrobeModalProps> = ({ visible, onClose, wardrob
   const [activeSection, setActiveSection] = useState("clothes"); // 'clothes' or 'outfits'
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const categories = ['All Clothes', 'Dresses', 'Tops', 'Outerwear', 'Bottoms', 'Activewear', 'Shoes'];
-
+  const IMAGES: {[key: string]: any}= {
+    "bottom1": require("@/assets/images/bottom1.png"),
+    "dress1": require("@/assets/images/dress1.png"),
+    "top1": require("@/assets/images/top1.png"),
+    "bottom2": require("@/assets/images/bottom2.png"),
+    "bottom3": require("@/assets/images/bottom3.png"),
+    "dress2": require("@/assets/images/dress2.png"),
+    "dress3": require("@/assets/images/dress3.png"),
+    "top2": require("@/assets/images/top2.png"),
+    "top3": require("@/assets/images/top3.png"),
+    "shoe1": require("@/assets/images/shoes1.png"),
+    "shoe2": require("@/assets/images/shoes2.png"),
+    "shoe3": require("@/assets/images/shoes3.png"),
+    "Outerwear1": require("@/assets/images/Outerwear1.png"),
+    "Outerwear2": require("@/assets/images/Outerwear2.png"),
+  }; 
+  
   const renderCategories = () => {
     return (
       <ScrollView contentContainerStyle={styles.grid}>
@@ -39,22 +56,30 @@ const WardrobeModal: React.FC<WardrobeModalProps> = ({ visible, onClose, wardrob
 
   const renderCategoryItems = () => {
     if (!selectedCategory) return null;
-    const items = wardrobeCategories['clothes'][selectedCategory];
+    const items = wardrobeCategories['clothes'][selectedCategory as keyof typeof wardrobeCategories['clothes']];
     if (!items) {
       return <Text>No items found in this category</Text>;
     }
+   
 
     return (
       <ScrollView contentContainerStyle={styles.grid}>
-        {items.map((item, index) => (
+        {items.map((item, index) => {
+        return(
+          
           <TouchableOpacity
             key={index}
             style={styles.gridItem}
             // Implement navigation or other logic here
           >
-            <Text style={styles.gridItemText}>{item.name}</Text>
+            <Image
+              source={IMAGES[item.name as keyof typeof IMAGES]} // Add index signature to IMAGES object
+              style={styles.itemImage} // Ensure you have a style for the image
+            />
+            <Text >{item.name}</Text>
           </TouchableOpacity>
-        ))}
+        );
+  })}
       </ScrollView>
     );
   };
@@ -175,6 +200,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  itemImage: {
+    width: 80, // Adjust as needed
+    height: 80,
+    borderRadius: 10, // Optional: for rounded corners
+    marginBottom: 5,
+  },
 });
-
 export default WardrobeModal;
