@@ -13,11 +13,14 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
+import wardrobeCategories from "@/assets/wardrobeItems.json";
 // import MyModal from "@/components/WardrobeModel";
 import WardrobeModal from "@/components/WardrobeModel";
+import LookbookModal from "@/components/LookbookModel";
 export default function TabOneScreen() {
   const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [WmodalVisible, WsetModalVisible] = useState(false);
+  const [lmodalVisible, lsetModalVisible] = useState(false);
   React.useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
@@ -30,8 +33,15 @@ export default function TabOneScreen() {
           items={wardrobeItems} // Pass wardrobeItems as props here
         /> */}
         <WardrobeModal
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
+          visible={WmodalVisible}
+          onClose={() => WsetModalVisible(false)}
+          // wardrobeItems={wardrobeItems}
+          // navigation={navigation}
+          wardrobeItems={navigation}
+        />
+        <LookbookModal
+          visible={lmodalVisible}
+          onClose={() => lsetModalVisible(false)}
           // wardrobeItems={wardrobeItems}
           // navigation={navigation}
           wardrobeItems={navigation}
@@ -39,7 +49,7 @@ export default function TabOneScreen() {
         <WelcomeSection />
         <SummaryContainer />
         <View style={styles.wardrobeHeader}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity onPress={() => WsetModalVisible(true)}>
             <Text style={styles.wardrobeHeaderText}>{"My Wardrobe"}</Text>
           </TouchableOpacity>
         </View>
@@ -55,12 +65,12 @@ export default function TabOneScreen() {
             backgroundColor="#A4763B"
           />
         </View>
-        {/* <HorizontalScrollView items={wardrobeItems} /> */}
+        <HorizontalScrollView items={wardrobeCategories['clothes']['All Clothes']} />
 
         <View style={styles.buttonRow}>
           <View style={styles.wardrobeHeader}>
-            <TouchableOpacity>
-              {/* onPress={() => navigation.navigate('MyWardrobeScreen)} */}
+            <TouchableOpacity onPress={() => lsetModalVisible(true)}>
+              
               <Text style={styles.wardrobeHeaderText}>{"My Lookbooks"}</Text>
             </TouchableOpacity>
           </View>
@@ -71,7 +81,7 @@ export default function TabOneScreen() {
             backgroundColor="#A4763B"
           />
         </View>
-        {/* <HorizontalScrollView items={wardrobeItems} /> */}
+        <HorizontalScrollView items={wardrobeCategories['lookbooks']} />
       </ScrollView>
     </SafeAreaView>
   );

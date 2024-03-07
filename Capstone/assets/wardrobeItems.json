@@ -43,5 +43,25 @@
   },
   "outfits": {
     // Placeholder for outfits categories and items
+  },
+  "lookbooks":[
+    {"name":"Y2K_inspo", "image":"Y2K_inspo.png"},
+    {"name":"Spring_Lover", "image":"Spring_Lover.png"},
+    {"name":"Coquette_Luver", "image":"Coquette_Luver.png"}
+  ],
+  "lookbookinspo": {
+    "Y2K_inspo": [
+      {"name": "y2k1", "image": "y2k1.png"},
+      {"name": "y2k2", "image": "y2k2.png"},
+      {"name": "y2k3", "image": "y2k3.png"},
+      {"name": "y2k4", "image": "y2k4.png"}
+    ]
+    // {"name": "y2k1", "image": "y2k1.png", "lookbook": "Y2K_inspo"},
+    // {"name": "y2k2", "image": "y2k2.png", "lookbook": "Y2K_inspo"},
+    // {"name": "y2k3", "image": "y2k3.png", "lookbook": "Y2K_inspo"},
+    // {"name": "y2k4", "image": "y2k4.png", "lookbook": "Y2K_inspo"}
+
   }
+  
+  
 }

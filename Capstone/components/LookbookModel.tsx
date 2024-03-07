@@ -10,54 +10,34 @@ import {
 } from "react-native";
 import wardrobeCategories from '../assets/wardrobeItems.json';
 import { AntDesign } from "@expo/vector-icons";
-import IMAGES from "@/components/IMAGES";
 interface WardrobeModalProps {
   visible: boolean;
   onClose: () => void;
   wardrobeItems: any[]; // Specify a more specific type if possible
   navigation: any; // Specify a more specific type if possible, e.g., NavigationType from react-navigation if you're using it
 }
+import IMAGES from "@/components/IMAGES";
 
-const WardrobeModal: React.FC<WardrobeModalProps> = ({ visible, onClose, wardrobeItems, navigation }) => {
+const LookbookModal: React.FC<WardrobeModalProps> = ({ visible, onClose, wardrobeItems, navigation }) => {
   const [activeSection, setActiveSection] = useState("clothes"); // 'clothes' or 'outfits'
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const categories = ['All Clothes', 'Dresses', 'Tops', 'Outerwear', 'Bottoms', 'Activewear', 'Shoes'];
+  
   
  
-  const renderCategories = () => {
+const renderCategories = () => {
+    const categories = Object.values(wardrobeCategories['lookbooks']);
+    // console.log(categories);
     return (
       <ScrollView contentContainerStyle={styles.grid}>
-        {categories.map((categoryName, index) => {
-          const categoryItems = wardrobeCategories['clothes'][categoryName] || [];
-          const exampleImages = categoryItems.length ? categoryItems.slice(0, 3).map(item => IMAGES[item.name as keyof typeof IMAGES]) : [];
-  
-          return (
-            <TouchableOpacity
-              key={index}
-              style={styles.gridItem}
-              onPress={() => setSelectedCategory(categoryName)}
-            >
-              <View style={styles.imageStack}>
-                {exampleImages.map((src, idx) => (
-                  <Image
-                    key={idx}
-                    source={src}
-                    style={[
-                      styles.stackItemImage,
-                      {
-                        // Create a stepped effect for each image
-                        // top: idx * 10, // Each image is offset vertically by 10 units more than the previous image
-                        left: idx * 20, // Each image is offset horizontally by 10 units more than the previous image
-                        zIndex: exampleImages.length - idx,
-                      },
-                    ]}
-                  />
-                ))}
-              </View>
-              <Text style={styles.gridItemText}>{categoryName}</Text>
-            </TouchableOpacity>
-          );
-        })}
+        {categories.map((category, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.gridItem}
+            onPress={() => setSelectedCategory(category.name)}
+          >
+            <Image source={IMAGES[category.name]} style={styles.itemImage} />
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     );
   };
@@ -66,12 +46,15 @@ const WardrobeModal: React.FC<WardrobeModalProps> = ({ visible, onClose, wardrob
   
   const renderCategoryItems = () => {
     if (!selectedCategory) return null;
-    const items = wardrobeCategories['clothes'][selectedCategory as keyof typeof wardrobeCategories['clothes']];
-    if (!items) {
-      return <Text>No items found in this category</Text>;
-    }
-   
-
+  if (!wardrobeCategories['lookbookinspo']) {
+    return <Text>'lookbooksinspo' category not found</Text>;
+  }
+  const items = wardrobeCategories['lookbookinspo'][selectedCategory];
+  if (!items) {
+    return <Text>No items found in this category</Text>;
+  }
+   console.log("e");
+console.log(items);
     return (
       <ScrollView contentContainerStyle={styles.grid}>
         {items.map((item, index) => {
@@ -83,7 +66,7 @@ const WardrobeModal: React.FC<WardrobeModalProps> = ({ visible, onClose, wardrob
             // Implement navigation or other logic here
           >
             <Image
-              source={IMAGES[item.name as keyof typeof IMAGES]} // Add index signature to IMAGES object
+              source={IMAGES[item.name]} // Add index signature to IMAGES object
               style={styles.itemImage} // Ensure you have a style for the image
             />
             <Text >{item.name}</Text>
@@ -103,6 +86,7 @@ const WardrobeModal: React.FC<WardrobeModalProps> = ({ visible, onClose, wardrob
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
+            
         <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
             onPress={()=>{
@@ -124,7 +108,7 @@ const WardrobeModal: React.FC<WardrobeModalProps> = ({ visible, onClose, wardrob
                     : styles.inactiveSection
                 }
               >
-                Clothes
+               My Lookbooks
               </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setActiveSection("outfits")}>
@@ -244,4 +228,4 @@ const styles = StyleSheet.create({
   },
   
 });
-export default WardrobeModal;
+export default LookbookModal;
