@@ -1,12 +1,13 @@
 import React from "react";
 import { View, ScrollView, StyleSheet, Image } from "react-native";
-
+import IMAGES from "@/components/IMAGES";
 // Define the props interface
 interface MyScrollViewProps {
   items: Array<{ "Item Number": string; "Image Filename": string }>;
 }
 
 const HorizontalScrollView: React.FC<MyScrollViewProps> = ({ items }) => {
+  console.log(items);
   // Generate views based on the items prop
   const views = items.map((item, index) => (
     <View
@@ -14,9 +15,9 @@ const HorizontalScrollView: React.FC<MyScrollViewProps> = ({ items }) => {
       style={styles.viewStyle}
     >
       <Image
-        source={{ uri: item["Image Filename"] }}
+        source={ IMAGES[item.name] }
         style={{ width: "100%", height: "100%" }}
-        resizeMode="contain"
+        resizeMode="cover"
       />
     </View>
   ));
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     width: 107,
     height: 140,
     backgroundColor: "#D9D9D9",
-    borderRadius: 8,
+    borderRadius: 10,
     marginRight: 8,
   },
 });
