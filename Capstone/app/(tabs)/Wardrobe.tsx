@@ -13,8 +13,8 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
-import MyModal from "@/components/WardrobeModel";
-
+// import MyModal from "@/components/WardrobeModel";
+import WardrobeModal from "@/components/WardrobeModel";
 export default function TabOneScreen() {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -24,12 +24,17 @@ export default function TabOneScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
-        <MyModal
+        {/* <MyModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           items={wardrobeItems} // Pass wardrobeItems as props here
+        /> */}
+        <WardrobeModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          wardrobeItems={wardrobeItems}
+          navigation={navigation}
         />
-
         <WelcomeSection />
         <SummaryContainer />
         <View style={styles.wardrobeHeader}>

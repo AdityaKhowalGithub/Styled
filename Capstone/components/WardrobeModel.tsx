@@ -1,104 +1,131 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   View,
   Text,
   TouchableOpacity,
+  ScrollView,
   StyleSheet,
-  FlatList,
-  Image,
-  ImageStyle,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import wardrobeCategories from '../assets/wardrobeItems.json';
 
-// Define interfaces for your props and items
-interface WardrobeItem {
-  name: string;
-  image: keyof typeof IMAGES | string; // using keyof typeof IMAGES assumes exact keys match, string gives flexibility
-}
-
-interface MyModalProps {
+interface WardrobeModalProps {
   visible: boolean;
   onClose: () => void;
-  items: WardrobeItem[];
+  wardrobeItems: any[]; // Specify a more specific type if possible
+  navigation: any; // Specify a more specific type if possible, e.g., NavigationType from react-navigation if you're using it
 }
 
-const IMAGES = {
-  Rectangle1: require("@/assets/images/Rectangle1.png"),
-  Rectangle2: require("@/assets/images/Rectangle2.png"),
-  Rectangle3: require("@/assets/images/Rectangle3.png"),
-};
+const WardrobeModal: React.FC<WardrobeModalProps> = ({ visible, onClose, wardrobeItems, navigation }) => {
+  const [activeSection, setActiveSection] = useState("clothes"); // 'clothes' or 'outfits'
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const categories = ['All Clothes', 'Dresses', 'Tops', 'Outerwear', 'Bottoms', 'Activewear', 'Shoes'];
 
-const MyModal: React.FC<MyModalProps> = ({ visible, onClose, items }) => {
-  const renderItem = ({ item }: { item: WardrobeItem }) => {
-    // Assuming item.image directly corresponds to the keys in IMAGES
-    // You might need to transform item.image to match the exact keys if necessary
-    const imageKey = item.image
-      .replace("@/assets/images/", "")
-      .replace(".png", "") as keyof typeof IMAGES;
-    const imageSource = IMAGES[imageKey];
+  const renderCategories = () => {
+    return (
+      <ScrollView contentContainerStyle={styles.grid}>
+        {categories.map((category, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.gridItem}
+            onPress={() => setSelectedCategory(category)}
+          >
+            <Text style={styles.gridItemText}>{category}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
+
+  const renderCategoryItems = () => {
+    if (!selectedCategory) return null;
+    const items = wardrobeCategories['clothes'][selectedCategory];
+    if (!items) {
+      return <Text>No items found in this category</Text>;
+    }
 
     return (
-      <View style={styles.itemContainer}>
-        <Text style={styles.itemText}>{item.name}</Text>
-        {imageSource && (
-          <Image source={imageSource} style={styles.itemImage as ImageStyle} />
-        )}
-      </View>
+      <ScrollView contentContainerStyle={styles.grid}>
+        {items.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.gridItem}
+            // Implement navigation or other logic here
+          >
+            <Text style={styles.gridItemText}>{item.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     );
   };
 
   return (
     <Modal
-      visible={visible}
-      transparent={true}
       animationType="slide"
+      transparent={true}
+      visible={visible}
       onRequestClose={onClose}
-      style={{ flex: 1 }}
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
+          <View style={styles.modalHeader}>
+            <TouchableOpacity onPress={() => setActiveSection("clothes")}>
+              <Text
+                style={
+                  activeSection === "clothes"
+                    ? styles.activeSection
+                    : styles.inactiveSection
+                }
+              >
+                Clothes
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setActiveSection("outfits")}>
+              <Text
+                style={
+                  activeSection === "outfits"
+                    ? styles.activeSection
+                    : styles.inactiveSection
+                }
+              >
+                Outfits
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {selectedCategory ? renderCategoryItems() : renderCategories()}
+
+          <TouchableOpacity
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => setSelectedCategory(null)}
+          >
+            <Text style={styles.textStyle}>Back to Categories</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
             onPress={onClose}
           >
-            <AntDesign name="left" size={24} color="black" />
+            <Text style={styles.textStyle}>Hide Modal</Text>
           </TouchableOpacity>
-          <FlatList
-            data={items}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.name.toString()}
-            numColumns={3}
-            contentContainerStyle={styles.grid}
-          />
         </View>
       </View>
     </Modal>
   );
 };
 
-// Define your styles here
 const styles = StyleSheet.create({
-  // Previous styles go here
-  itemImage: {
-    width: 100, // Adjust as needed
-    height: 100,
-    borderRadius: 5,
-    marginBottom: 5,
-  },
   centeredView: {
     flex: 1,
-
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.5)", // Semi-transparent background
   },
   modalView: {
-    width: "100%", // Full width
-    height: "100%", // Full height
+    margin: 20,
     backgroundColor: "white",
-
-    padding: 20, // Adjust padding as needed, maybe less than 35 to use space more efficiently
+    borderRadius: 20,
+    padding: 35,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -109,42 +136,45 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%", // Ensure the header spans the entire width of the modal
+    marginBottom: 20, // Space below the header
+  },
+  activeSection: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  inactiveSection: {
+    color: "#ccc",
+  },
   grid: {
-    marginBottom: 10,
-    marginTop: 50, // Adjust as needed
-    width: "100 %", // Adjust the width as per your item content
-    borderColor: "#ccc",
-    borderWidth: 1,
-
-    marginRight: 8,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
   },
-  itemContainer: {
-    flex: 1,
-    alignItems: "center",
+  gridItem: {
+    width: 100,
+    height: 100,
     justifyContent: "center",
-    margin: 50,
-    height: 100, // Adjust the height as per your item content
-    borderRadius: 8,
-  },
-  itemText: {
-    textAlign: "center",
-  },
-  button: {
-    borderRadius: 4,
-    padding: 5,
-    elevation: 2,
-    marginTop: 50,
-    marginRight: 300,
+    alignItems: "center",
+    margin: 10,
+    backgroundColor: "#f9f9f9", // Light background for each grid item
+    borderRadius: 10, // Rounded corners for grid items
   },
   buttonClose: {
-    backgroundColor: "#D7C0AE",
+    backgroundColor: "#2196F3",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 20, // Space above the close button
   },
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
   },
-  // Add other styles as needed
 });
 
-export default MyModal;
+export default WardrobeModal;
