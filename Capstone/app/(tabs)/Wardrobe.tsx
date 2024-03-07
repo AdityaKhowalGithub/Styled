@@ -3,7 +3,7 @@ import HorizontalScrollView from "@/components/HorizontalView";
 import SummaryContainer from "@/components/SummaryContainer"; // Adjust the path as necessary
 import { Text, View } from "@/components/Themed";
 import WelcomeSection from "@/components/WardrobeWelcome"; // Adjust the path as necessary
-import wardrobeItems from "@/components/wardrobe_items.json";
+ import wardrobeItems from "@/assets/wardrobeItems.json";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
@@ -32,8 +32,9 @@ export default function TabOneScreen() {
         <WardrobeModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
-          wardrobeItems={wardrobeItems}
-          navigation={navigation}
+          // wardrobeItems={wardrobeItems}
+          // navigation={navigation}
+          wardrobeItems={navigation}
         />
         <WelcomeSection />
         <SummaryContainer />
@@ -54,7 +55,7 @@ export default function TabOneScreen() {
             backgroundColor="#A4763B"
           />
         </View>
-        <HorizontalScrollView items={wardrobeItems} />
+        {/* <HorizontalScrollView items={wardrobeItems} /> */}
 
         <View style={styles.buttonRow}>
           <View style={styles.wardrobeHeader}>
@@ -70,7 +71,7 @@ export default function TabOneScreen() {
             backgroundColor="#A4763B"
           />
         </View>
-        <HorizontalScrollView items={wardrobeItems} />
+        {/* <HorizontalScrollView items={wardrobeItems} /> */}
       </ScrollView>
     </SafeAreaView>
   );
