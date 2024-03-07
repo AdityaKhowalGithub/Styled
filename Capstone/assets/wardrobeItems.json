@@ -1,0 +1,47 @@
+{
+  "clothes": {
+    "All Clothes": [
+      {"name": "bottom1", "image": "bottom1.png"},
+      {"name": "dress1", "image": "dress1.png"},
+      {"name": "top1", "image": "top1.png"},
+      {"name": "bottom2", "image": "bottom2.png"},
+      {"name": "bottom3", "image": "bottom3.png"},
+      {"name": "dress2", "image": "dress2.png"},
+      {"name": "dress3", "image": "dress3.png"},
+      {"name": "top2", "image": "top2.png"},
+      {"name": "top3", "image": "top3.png"},
+      {"name": "shoe1", "image": "shoe1.png"},
+      {"name": "shoe2", "image": "shoe2.png"},
+      {"name": "shoe3", "image": "shoe3.png"},
+      {"name": "Outerwear1", "image": "Outerwear1.png"},
+      {"name": "Outerwear2", "image": "Outerwear2.png"}
+    ],
+    "Bottoms": [
+      {"name": "bottom1", "image": "bottom1.png"},
+      {"name": "bottom2", "image": "bottom2.png"},
+      {"name": "bottom3", "image": "bottom3.png"}
+    ],
+    "Dresses": [
+      {"name": "dress1", "image": "dress1.png"},
+      {"name": "dress2", "image": "dress2.png"},
+      {"name": "dress3", "image": "dress3.png"}
+    ],
+    "Tops": [
+      {"name": "top1", "image": "top1.png"},
+      {"name": "top2", "image": "top2.png"},
+      {"name": "top3", "image": "top3.png"}
+    ],
+    "Shoes": [
+      {"name": "shoe1", "image": "shoe1.png"},
+      {"name": "shoe2", "image": "shoe2.png"},
+      {"name": "shoe3", "image": "shoe3.png"}
+    ],
+    "Outerwear": [
+      {"name": "Outerwear1", "image": "Outerwear1.png"},
+      {"name": "Outerwear2", "image": "Outerwear2.png"}
+    ]
+  },
+  "outfits": {
+    // Placeholder for outfits categories and items
+  }
+}
