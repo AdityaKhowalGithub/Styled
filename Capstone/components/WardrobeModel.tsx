@@ -38,22 +38,65 @@ const WardrobeModal: React.FC<WardrobeModalProps> = ({ visible, onClose, wardrob
     "Outerwear2": require("@/assets/images/Outerwear2.png"),
   }; 
   
+  // const renderCategories = () => {
+  //   return (
+  //     <ScrollView contentContainerStyle={styles.grid}>
+  //       {categories.map((category, index) => (
+  //         <TouchableOpacity
+  //           key={index}
+  //           style={styles.gridItem}
+  //           onPress={() => setSelectedCategory(category)}
+  //         >
+  //           <Text style={styles.gridItemText}>{category}</Text>
+  //         </TouchableOpacity>
+  //       ))}
+  //     </ScrollView>
+  //   );
+  // };
   const renderCategories = () => {
     return (
       <ScrollView contentContainerStyle={styles.grid}>
-        {categories.map((category, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.gridItem}
-            onPress={() => setSelectedCategory(category)}
-          >
-            <Text style={styles.gridItemText}>{category}</Text>
-          </TouchableOpacity>
-        ))}
+        {categories.map((categoryName, index) => {
+          // Get the items for the category if it exists, otherwise use an empty array
+          const categoryItems = wardrobeCategories['clothes'][categoryName] || [];
+  
+          // Get up to three items from the categoryItems array
+          const exampleImages = categoryItems.length ? categoryItems.slice(0, 3).map(item => IMAGES[item.name as keyof typeof IMAGES]) : [];
+  
+          return (
+            <TouchableOpacity
+              key={index}
+              style={styles.gridItem}
+              onPress={() => setSelectedCategory(categoryName)}
+            >
+              {exampleImages.length > 0 ? (
+                <View style={styles.imageStack}>
+                  {exampleImages.map((src, idx) => (
+                    <Image
+                      key={idx}
+                      source={src}
+                      style={[
+                        styles.stackItemImage,
+                        { zIndex: exampleImages.length - idx },
+                      ]}
+                    />
+                  ))}
+                </View>
+              ) : (
+                // Provide a fallback for when there are no images
+                <View style={styles.imageStack}>
+                  <Text>No Image</Text>
+                </View>
+              )}
+              <Text style={styles.gridItemText}>{categoryName}</Text>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     );
   };
-
+  
+  
   const renderCategoryItems = () => {
     if (!selectedCategory) return null;
     const items = wardrobeCategories['clothes'][selectedCategory as keyof typeof wardrobeCategories['clothes']];
@@ -206,5 +249,19 @@ const styles = StyleSheet.create({
     borderRadius: 10, // Optional: for rounded corners
     marginBottom: 5,
   },
+  imageStack: {
+    width: 100, // Width of the image stack
+    height: 100, // Height of the image stack
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative', // Needed to position the images absolutely within the stack
+  },
+  stackItemImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute', // Position the images on top of each other
+    resizeMode: 'contain', // Keep the image aspect ratio
+  },
+  
 });
 export default WardrobeModal;
