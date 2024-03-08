@@ -1,5 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import IMAGES from "@/components/IMAGES";
+import wardrobeCategories from "@/assets/wardrobeItems.json";
 // Import firebase from 'firebase/app';
 // import 'firebase/firestore';
 // import 'firebase/auth';
@@ -16,37 +25,64 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'rea
 // if (!firebase.apps.length) {
 //   firebase.initializeApp(firebaseConfig);
 // }
+
 const ProfileScreen = ({ userId }) => {
-  // State to store profile data
   const [profileData, setProfileData] = useState({
-    name: '',
-    username: '',
-    bio: '',
-    profileImageUri: '',
+    name: "",
+    username: "",
+    bio: "",
+    profileImageUri: "",
     lookbooks: [],
   });
 
+  // State to store the selected category
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
   useEffect(() => {
-    // Dummy data for the profile
     const dummyData = {
-      name: 'Jennifer Coolidge',
-      username: 'jenniferlovespink',
-      bio: 'Hi everyone! My name is Jennifer and I love pink. My two pet flamingos SSR and TXI love it too!',
-      profileImageUri: '../assets/images/TestPFP.png', // Replace with actual image path
+      name: "Dior Simmons",
+      username: "diorhandbag",
+      bio: "Hi everyone! My name is dior and I love Gucci. I have two pet flamingos!",
       lookbooks: [
-        { title: 'Y2K', id: 1 },
-        { title: 'All pink', id: 2 },
-        { title: 'Going out', id: 3 },
-        { title: 'Comfy', id: 4 }
-        // ... other lookbooks
+        {
+          title: "Y2K_inspo",
+          id: 1,
+          categories: [
+            { name: "Tops", items: ["Top1", "Top3"] },
+            { name: "Bottoms", items: ["Bottom1"] },
+          ],
+        },
+        {
+          title: "Spring_Lover",
+          id: 2,
+          categories: [{ name: "Shoes", items: ["shoes1", "shoes2"] }],
+        },
       ],
     };
-    
-    // Simulating a fetch request with a timeout
+
     setTimeout(() => {
       setProfileData(dummyData);
     }, 1000);
   }, [userId]);
+
+  const renderLookbooks = () => {
+    const categories = Object.values(wardrobeCategories["lookbooks"]);
+    return (
+      <ScrollView contentContainerStyle={styles.grid}>
+        {categories.map((category, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.gridItem}
+            onPress={() => {
+              setSelectedCategory(category.name);
+            }}
+          >
+            <Image source={IMAGES[category.name]} style={styles.itemImage} />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
 
   if (!profileData.name) {
     return <Text>Loading...</Text>;
@@ -57,7 +93,7 @@ const ProfileScreen = ({ userId }) => {
       <View style={styles.headerContainer}>
         <Image
           style={styles.profileImage}
-          source={{ uri: profileData.profileImageUri }}
+          source={require("@/assets/images/TESTpfp.png")}
         />
         <Text style={styles.name}>{profileData.name}</Text>
         <Text style={styles.username}>@{profileData.username}</Text>
@@ -69,11 +105,7 @@ const ProfileScreen = ({ userId }) => {
 
       <View style={styles.lookbooksContainer}>
         <Text style={styles.lookbooksTitleText}>My Lookbooks</Text>
-        {profileData.lookbooks.map((lookbook) => (
-          <TouchableOpacity key={lookbook.id} style={styles.lookbookItem}>
-            <Text>{lookbook.title}</Text>
-          </TouchableOpacity>
-        ))}
+        {renderLookbooks()}
       </View>
     </ScrollView>
   );
@@ -82,13 +114,54 @@ const ProfileScreen = ({ userId }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
+  // Other existing styles...
+  lookbooksContainer: {
+    padding: 20,
+  },
+  lookbooksTitleText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  grid: {
+    flexDirection: "row", // Arrange items in a row
+    flexWrap: "wrap", // Allow items to wrap to the next line
+    justifyContent: "space-between", // Distribute extra space evenly
+  },
+  gridItem: {
+    width: "48%", // Two items per row, adjust accordingly
+    aspectRatio: 1, // Keep items square-shaped, adjust if needed
+    marginBottom: 10, // Spacing between rows
+    alignItems: "center", // Center items horizontally
+    justifyContent: "center", // Center items vertically
+  },
+  itemImage: {
+    width: "100%", // Take up all available width in gridItem
+    height: "100%", // Height is determined by aspectRatio
+    borderRadius: 10, // Optional: rounded corners
+  },
+
   headerContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
+  },
+  categoryTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  itemContainer: {
+    alignItems: "center", // Center items vertically
+    marginRight: 10, // Spacing between items
+  },
+
+  itemText: {
+    marginTop: 5, // Space between image and text label
+    fontSize: 12,
   },
   profileImage: {
     width: 100,
@@ -98,34 +171,27 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
   username: {
     fontSize: 16,
-    color: 'grey',
+    color: "grey",
   },
   bioContainer: {
     padding: 20,
   },
   bioText: {
     fontSize: 14,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
-  lookbooksContainer: {
-    padding: 20,
-  },
-  lookbooksTitleText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
+
   lookbookItem: {
     // Style for each lookbook item
     padding: 10,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
   },
   // Add more styles as needed
