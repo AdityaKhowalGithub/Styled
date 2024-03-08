@@ -1,5 +1,11 @@
 import React from "react";
-import { View, ScrollView, StyleSheet, Image } from "react-native";
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import IMAGES from "@/components/IMAGES";
 // Define the props interface
 interface MyScrollViewProps {
@@ -7,7 +13,7 @@ interface MyScrollViewProps {
 }
 
 const HorizontalScrollView: React.FC<MyScrollViewProps> = ({ items }) => {
-  console.log(items);
+  // console.log(items);
   // Generate views based on the items prop
   const views = items.map((item, index) => (
     <View
@@ -15,7 +21,7 @@ const HorizontalScrollView: React.FC<MyScrollViewProps> = ({ items }) => {
       style={styles.viewStyle}
     >
       <Image
-        source={ IMAGES[item.name] }
+        source={IMAGES[item.name]}
         style={{ width: "100%", height: "100%" }}
         resizeMode="cover"
       />
