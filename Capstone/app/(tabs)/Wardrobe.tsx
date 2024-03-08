@@ -3,7 +3,7 @@ import HorizontalScrollView from "@/components/HorizontalView";
 import SummaryContainer from "@/components/SummaryContainer"; // Adjust the path as necessary
 import { Text, View } from "@/components/Themed";
 import WelcomeSection from "@/components/WardrobeWelcome"; // Adjust the path as necessary
- import wardrobeItems from "@/assets/wardrobeItems.json";
+import wardrobeItems from "@/assets/wardrobeItems.json";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
@@ -50,7 +50,7 @@ export default function TabOneScreen() {
         <SummaryContainer />
         <View style={styles.wardrobeHeader}>
           <TouchableOpacity onPress={() => WsetModalVisible(true)}>
-            <Text style={styles.wardrobeHeaderText}>{"My Wardrobe"}</Text>
+            <Text style={styles.wardrobeHeaderText}>{"My Wardrobe >"}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.buttonRow}>
@@ -65,13 +65,14 @@ export default function TabOneScreen() {
             backgroundColor="#A4763B"
           />
         </View>
-        <HorizontalScrollView items={wardrobeCategories['clothes']['All Clothes']} />
+        <HorizontalScrollView
+          items={wardrobeCategories["clothes"]["All Clothes"]}
+        />
 
         <View style={styles.buttonRow}>
           <View style={styles.wardrobeHeader}>
             <TouchableOpacity onPress={() => lsetModalVisible(true)}>
-              
-              <Text style={styles.wardrobeHeaderText}>{"My Lookbooks"}</Text>
+              <Text style={styles.wardrobeHeaderText}>{"My Lookbooks >"}</Text>
             </TouchableOpacity>
           </View>
 
@@ -81,7 +82,7 @@ export default function TabOneScreen() {
             backgroundColor="#A4763B"
           />
         </View>
-        <HorizontalScrollView items={wardrobeCategories['lookbooks']} />
+        <HorizontalScrollView items={wardrobeCategories["lookbooks"]} />
       </ScrollView>
     </SafeAreaView>
   );
