@@ -1,3 +1,4 @@
+
 import Button from "@/components/Button"; // Adjust the path as necessary
 import HorizontalScrollView from "@/components/HorizontalView";
 import SummaryContainer from "@/components/SummaryContainer"; // Adjust the path as necessary
@@ -21,10 +22,12 @@ export default function TabOneScreen() {
   const navigation = useNavigation();
   const [WmodalVisible, WsetModalVisible] = useState(false);
   const [lmodalVisible, lsetModalVisible] = useState(false);
+
   React.useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
   return (
+
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
         {/* <MyModal
@@ -68,6 +71,7 @@ export default function TabOneScreen() {
         <HorizontalScrollView
           items={wardrobeCategories["clothes"]["All Clothes"]}
         />
+
 
         <View style={styles.buttonRow}>
           <View style={styles.wardrobeHeader}>

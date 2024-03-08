@@ -25,3 +25,6 @@ name-<issue>-<description>: Personal branch for any contributors to open up for 
 
 <issue>: issue number of the branch. If this a feature/bug/anything, open an issue and write out a description as well as spec for the branch. This can potentially be empty then the name should be name-<description>
 <description>: Make it short
+
+![image](https://github.com/AdityaKhowalGithub/Styled/assets/108611217/71d6cbbb-f49e-4899-826c-5cdbfd40ac38)
+
