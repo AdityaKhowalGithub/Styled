@@ -10,20 +10,19 @@ const ActivityScreen = ({}) => {
     user: '',
 		profilePicUri: '',
     communityName: '',
-    communityUrl: '',
     postImageUri: '',
     caption: '',
   });
 
 	const [modalVisible, setModalVisible] = useState(false);
 
-	const [number, onChangeNumber] = React.useState('');
+	const [text, onChangeText] = React.useState('');
 
 
 	var [ isPress, setIsPress ] = React.useState(false);
 	var touchProps = {
     activeOpacity: 1,
-    underlayColor: 'blue',                               // <-- "backgroundColor" will be always overwritten by "underlayColor"
+    underlayColor: 'red',                               // <-- "backgroundColor" will be always overwritten by "underlayColor"
     style: isPress ? styles.btnPress : styles.btnNormal, // <-- but you can still apply other style changes
     onHideUnderlay: () => setIsPress(false),
     onShowUnderlay: () => setIsPress(true),
@@ -34,10 +33,9 @@ const ActivityScreen = ({}) => {
     // Dummy data for the feed
     const dummyData1 = {
         user: 'Chris Tiller',
-				profilePicUri: '',
+				profilePicUri: '../assets/images/christillerpfp.png',
         communityName: 'Y2K mix',
-        communityUrl: '',
-        postImageUri: '',
+        postImageUri: '../assets/images/postpic.png',
         caption: 'Suggestions on shoes that match?',
     };
     
@@ -85,10 +83,9 @@ const ActivityScreen = ({}) => {
             <Text style={styles.headerContainer}>Comments</Text>
 						<TextInput
 							style={styles.input}
-							onChangeText={onChangeNumber}
-							value={number}
+							onChangeText={onChangeText}
+							value={text}
 							placeholder="Leave a Comment"
-							keyboardType="numeric"
         		/>
             <Pressable
               style={[styles.button, styles.buttonClose]}

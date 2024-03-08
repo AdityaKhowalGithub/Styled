@@ -17,7 +17,6 @@ const CommunityOverviewScreen = ({}) => {
     user: '',
 		profilePicUri: '',
     communityName: '',
-    communityUrl: '',
     postImageUri: '',
     caption: '',
   });
@@ -36,7 +35,7 @@ const CommunityOverviewScreen = ({}) => {
     // Dummy data for the feed
     const communityData = {
       communityName: 'Seattle Vintage Collect',
-      communityPicUri: '',
+      communityPicUri: require("@/assets/images/seattlevintagepfp.png"),
       memberCount: '1031',
       communityBio: 'Welcome to Seattle Vintage Collect! Make sure to read the rules on posting or commenting! Have a great time.',
       communityLead: 'jenniferlovespink',
@@ -44,10 +43,9 @@ const CommunityOverviewScreen = ({}) => {
     
     const dummyPostData = {
       user: 'Chris Tiller',
-      profilePicUri: '',
+      profilePicUri: require("@/assets/images/christillerpfp.png"),
       communityName: 'Y2K mix',
-      communityUrl: '',
-      postImageUri: '',
+      postImageUri: '../assets/images/postpic.png',
       caption: 'Suggestions on shoes that match?',
   };
 
