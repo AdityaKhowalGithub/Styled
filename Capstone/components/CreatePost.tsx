@@ -48,7 +48,6 @@ const PostScreen = ({}) => {
           onChangeText={onChangeNumber}
           value={number}
           placeholder="Tell the community of your thoughts."
-          keyboardType="numeric"
         />
         <Text style={styles.name}>Poll</Text>
         <TextInput
@@ -56,7 +55,6 @@ const PostScreen = ({}) => {
           onChangeText={onChangeNumber}
           value={number}
           placeholder="What insight do you want to get?"
-          keyboardType="numeric"
         />
         <Text style={styles.name}>Image</Text>
         <UploadImage/>

@@ -321,7 +321,6 @@ const styles = StyleSheet.create({
   },
   communityHead: {
     flexDirection: 'row',
-
   },
 	postText: {
 		fontSize: 12,

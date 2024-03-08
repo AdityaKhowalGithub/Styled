@@ -47,7 +47,7 @@ const CommunityOverviewScreen = ({}) => {
       communityName: 'Y2K mix',
       postImageUri: '../assets/images/postpic.png',
       caption: 'Suggestions on shoes that match?',
-  };
+    };
 
     // Simulating a fetch request with a timeout
     setTimeout(() => {
@@ -200,4 +200,4 @@ const styles = StyleSheet.create({
 	
 });
 
-export default CommunitiesScreen;
+export default CommunityOverviewScreen;
