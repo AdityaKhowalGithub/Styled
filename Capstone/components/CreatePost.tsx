@@ -32,9 +32,8 @@ const PostScreen = ({}) => {
 		<ScrollView style={styles.container}>
 			
 			<View style={styles.headerContainer}>
-				<Text style={styles.header}>Create a Post</Text>
+				<Text style={styles.header}>{communityData.communityName}</Text>
 			</View>
-      <Text style={styles.categories}>{communityData.communityName}</Text>
       <View style={styles.createPostContainer}>
         <Text style={styles.postText}>
 					<Text style={styles.name}>{communityData.communityName}</Text>

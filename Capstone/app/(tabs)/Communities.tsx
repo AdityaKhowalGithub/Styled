@@ -26,7 +26,7 @@ const CommunitiesScreen = ({}) => {
     // Dummy data for the feed
     const dummyData1 = {
         communityName: 'Seattle Vintage Collect',
-				communityPicUri: '',
+				communityPicUri: require("@/assets/images/seattlevintagepfp.png"),
         memberCount: '1,031 members',
         communityBio: 'Find new fashion inspiration and share your unique style with others.',
     };
@@ -45,9 +45,8 @@ const CommunitiesScreen = ({}) => {
 		<ScrollView style={styles.container}>
 			
 			<View style={styles.headerContainer}>
-				<Text style={styles.header}>Community</Text>
+				<Text style={styles.header}>Communities for you</Text>
 			</View>
-      <Text style={styles.categories}>Communities for you</Text>
       <View style={styles.communityContainer}>
 			    <Image
           style={styles.profileImage}
@@ -64,8 +63,8 @@ const CommunitiesScreen = ({}) => {
 					<Text style={styles.name}>{communityData.communityBio}</Text>
 				</Text>
       </View>
-      <Text style={styles.categories}>Top in Seattle</Text>
-      <Text style={styles.categories}>Top in USA</Text>
+      <Text style={styles.header}>Top in Seattle</Text>
+      <Text style={styles.header}>Top in USA</Text>
       
 
     </ScrollView>
@@ -78,7 +77,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   headerContainer: {
-    alignItems: 'center',
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
