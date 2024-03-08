@@ -9,11 +9,18 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableHighlight, Alert, B
 export default function TabOneScreen() {
   const [feedData, setPostData] = useState({
     user: '',
-		profilePicUri: '',
     communityName: '',
-    postImageUri: '',
     caption: '',
   });
+
+  const IMAGES: {[key: string]: any} = {
+    "christiller": require("@/assets/images/christillerpfp.png"),
+    "post": require("@/assets/images/postpic.png"),
+    "comment": require("@/assets/images/comment.png"),
+    "like": require("@/assets/images/like.png"),
+    "styledpfp": require("@/assets/images/styledpfp.png"),
+    "styledpost": require("@/assets/images/styledpost.jpg"),
+  }
 
 	const [modalVisible, setModalVisible] = useState(false);
 
@@ -34,9 +41,7 @@ export default function TabOneScreen() {
     // Dummy data for the feed
     const dummyData1 = {
         user: 'Chris Tiller',
-				profilePicUri: '../assets/images/christillerpfp.png',
         communityName: 'Y2K mix',
-        postImageUri: '../assets/images/postpic.png',
         caption: 'Suggestions on shoes that match?',
     };
     
@@ -54,23 +59,36 @@ export default function TabOneScreen() {
 		<ScrollView style={styles.container}>
 			
 			<View style={styles.headerContainer}>
-				<Text style={styles.headerSwitch}>Activity</Text>
+				<Text style={styles.header}>Activity</Text>
 			</View>
       <View style={styles.postContainer}>
-				<Image
-          style={styles.profileImage}
-          source={{ uri: feedData.profilePicUri }}
-        />
-        <Text style={styles.postText}>
-					<Text style={styles.name}>{feedData.user} posts in {feedData.communityName}</Text>
-				</Text>
+        <View style={styles.centerContainer}>
+        <View style={styles.postHead}>
+          <Image
+            style={styles.profileImage}
+            source={ IMAGES["christiller"] }
+          />
+          <Text style={styles.postText}>
+            <Text style={styles.name}>{feedData.user} posts in {feedData.communityName}</Text>
+          </Text>
+        </View>
 				<Image
 					style={styles.postImage}
-					source={{ uri: feedData.postImageUri }}
+					source={ IMAGES["post"] }
 				/>
-				<TouchableHighlight {...touchProps}>
-        	<Text>Like</Text>
-      	</TouchableHighlight>
+        </View>
+        <Image
+          style={styles.icon}
+          source={ IMAGES["like"] }
+        />
+        <Text style={{
+          fontSize: 15,
+          color: 'black',
+          marginLeft: 35,
+          marginBottom: 10,
+        }}>
+          {feedData.caption}
+				</Text>
 				<Modal
         animationType="slide"
         transparent={true}
@@ -97,61 +115,133 @@ export default function TabOneScreen() {
         </View>
       </Modal>
       <Pressable
-        style={[styles.button, styles.buttonOpen]}
+        style={[styles.commentButton, styles.commentButtonOpen]}
         onPress={() => setModalVisible(true)}>
-        <Text style={styles.textStyle}>Comment</Text>
+        <Text style={styles.textStyle}>View comments...</Text>
+      </Pressable>	
+      </View>
+
+      <View style={styles.postContainer}>
+        <View style={styles.centerContainer}>
+        <View style={{
+          flexDirection: 'row',
+        }}>
+          <Image
+            style={styles.profileImage}
+            source={ IMAGES["styledpfp"] }
+          />
+          <Text style={styles.postText}>
+            <Text style={styles.name}>TeamStyled</Text>
+          </Text>
+        </View>
+				<Image
+					style={styles.postImage}
+					source={ IMAGES["styledpost"] }
+				/>
+        </View>
+        <Image
+          style={styles.icon}
+          source={ IMAGES["like"] }
+        />
+        <Text style={{
+          fontSize: 15,
+          color: 'black',
+          marginLeft: 35,
+          marginBottom: 10,
+        }}>
+          How to be a sustainable fashion lover – and why it matters: Upcycling, visible mending and organising are among the ways fashionistas are giving their wardrobes a longer life; Bel Jacobs explores how caring for our clothes also means caring for the planet.
+				</Text>
+				<Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.headerContainer}>Comments</Text>
+						<TextInput
+							style={styles.input}
+							onChangeText={onChangeText}
+							value={text}
+							placeholder="Leave a Comment"
+        		/>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Pressable
+        style={[styles.commentButton, styles.commentButtonOpen]}
+        onPress={() => setModalVisible(true)}>
+        <Text style={styles.textStyle}>View comments...</Text>
+      </Pressable>	
+      </View>
+
+      <View style={styles.postContainer}>
+        <View style={styles.centerContainer}>
+        <View style={styles.postHead}>
+          <Image
+            style={styles.profileImage}
+            source={ IMAGES["christiller"] }
+          />
+          <Text style={styles.postText}>
+            <Text style={styles.name}>{feedData.user} posts in {feedData.communityName}</Text>
+          </Text>
+        </View>
+				<Image
+					style={styles.postImage}
+					source={ IMAGES["post"] }
+				/>
+        </View>
+        <Image
+          style={styles.icon}
+          source={ IMAGES["like"] }
+        />
+        <Text style={{
+          fontSize: 15,
+          color: 'black',
+          marginLeft: 35,
+          marginBottom: 10,
+        }}>
+          {feedData.caption}
+				</Text>
+				<Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.headerContainer}>Comments</Text>
+						<TextInput
+							style={styles.input}
+							onChangeText={onChangeText}
+							value={text}
+							placeholder="Leave a Comment"
+        		/>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Pressable
+        style={[styles.commentButton, styles.commentButtonOpen]}
+        onPress={() => setModalVisible(true)}>
+        <Text style={styles.textStyle}>View comments...</Text>
       </Pressable>
-				<Text style={styles.postText}>
-					<Text style={styles.name}>{feedData.caption}</Text>
-				</Text>
-      </View>
-
-      <View style={styles.postContainer}>
-				<Image
-          style={styles.profileImage}
-          source={{ uri: feedData.profilePicUri }}
-        />
-        <Text style={styles.postText}>
-					<Text style={styles.name}>{feedData.user} posts in {feedData.communityName}</Text>
-				</Text>
-				<Image
-					style={styles.postImage}
-					source={{ uri: feedData.postImageUri }}
-				/>
-				<TouchableHighlight {...touchProps}>
-        	<Text>Like</Text>
-      	</TouchableHighlight>
-				<Button
-        title="Comment"
-        onPress={() => Alert.alert('Simple Button pressed')}
-      	/>
-				<Text style={styles.postText}>
-					<Text style={styles.name}>{feedData.caption}</Text>
-				</Text>
-      </View>
-
-      <View style={styles.postContainer}>
-				<Image
-          style={styles.profileImage}
-          source={{ uri: feedData.profilePicUri }}
-        />
-        <Text style={styles.postText}>
-					<Text style={styles.name}>{feedData.user} posts in {feedData.communityName}</Text>
-				</Text>
-				<Image
-					style={styles.postImage}
-					source={{ uri: feedData.postImageUri }}
-				/>
-				<TouchableHighlight {...touchProps}>
-        	<Text>Like</Text>
-      	</TouchableHighlight>
-				<Button
-        title="Comment"
-        onPress={() => Alert.alert('Simple Button pressed')}
-      	/>
-				<Text style={styles.postText}>
-					<Text style={styles.name}>{feedData.caption}</Text>
-				</Text>
+				
       </View>
 
     </ScrollView>
@@ -169,46 +259,54 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
-	headerSwitch: {
-		fontSize: 48,
+	header: {
+		fontSize: 25,
 		fontWeight: 'bold',
 		color: '#333',
 	},
+  postHead: {
+    flexDirection: 'row',
+  },
   profileImage: {
-    width: 10,
-    height: 10,
+    width: 50,
+    height: 50,
     borderRadius: 50,
-    marginBottom: 10,
+    marginRight: 15,
   },
   name: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
+    paddingLeft: 10,
+    marginTop: 30,
   },
   username: {
     fontSize: 16,
     color: 'grey',
   },
   postContainer: {
-    alignItems: 'center',
     padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+  },
+  centerContainer: {
+    alignItems: 'center',
   },
 	postText: {
-		fontSize: 24,
+		fontSize: 18,
 		color: 'black',
 	},
 	postImage: {
-		width: 150,
-		height: 150,
-		borderRadius: 50,
+		width: 300,
+		height: 300,
+		borderRadius: 20,
 		marginBottom: 10,
+    marginTop: 15,
 	},
 	icon: {
-		width: 8,
-		height: 8,
-		marginBottom: 10,
+		width: 30,
+		height: 30,
+    alignItems: 'flex-start',
+    marginLeft: 30,
+    marginBottom: 10,
 	},
 	btnNormal: {
     borderColor: 'blue',
@@ -249,8 +347,18 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
   },
+  commentButton: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    width: 150,
+    marginLeft: 20,
+  },
   buttonOpen: {
     backgroundColor: '#F194FF',
+  },
+  commentButtonOpen: {
+    backgroundColor: 'white',
   },
   buttonClose: {
     backgroundColor: '#2196F3',
