@@ -1,12 +1,24 @@
 # styled 
 😎
-To run the project, navigate to the directory and run one of the following yarn commands.
 
-- cd Capstone
-- npx expo start or npx expo start --c
-- w for web to test
+## Installation and testing
+```
+git clone https://github.com/AdityaKhowalGithub/Styled.git
 
-# Common Errors:
+cd Styled
+
+cd Capstone
+
+npx expo start or npx expo start --c
+
+w to test on browser (click inspect element and set to thingy to iphone 15
+i to test (if u have mac and phone plugged in or IOS simulator)
+a to test (if u have andriod simulator)
+
+```
+
+
+## Common Errors:
 try doing npm install/ yarn add lolmao
 use npx expo --- not just expo install
 
