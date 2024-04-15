@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
+// import firebase from '@/services/firebaseconfig';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/services/firebaseconfig"; // adjust the path as necessary
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = async () => {
-        // Implement login logic with Firebase here
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log("Logged in with:", userCredential.user);
+        } catch (error) {
+            console.error("Login failed:", error);
+        }
     };
-
     return (
         <View style={styles.container}>
             <TextInput

@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import MyWardrobeScreen from "@/components/expandWardrobe";
 import { useColorScheme } from "@/components/useColorScheme";
 import LoginScreen from './LoginScreen';
-import SignupScreen from './SignupScreen';
+
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -56,7 +56,7 @@ function RootLayoutNav() {
     return (
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
             <Stack>
-                <Stack.Screen name="Login" />
+                <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="Signup" />
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="modal" options={{ presentation: "modal" }} />
