@@ -10,7 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import MyWardrobeScreen from "@/components/expandWardrobe";
 import { useColorScheme } from "@/components/useColorScheme";
-import LoginScreen from './LoginScreen';
+// import LoginScreen from './LoginScreen';
 
 
 export {
@@ -56,8 +56,8 @@ function RootLayoutNav() {
     return (
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
             <Stack>
-                <Stack.Screen name="Login" component={LoginScreen} />
-                <Stack.Screen name="Signup" />
+                {/* <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="Signup" />*/}
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="modal" options={{ presentation: "modal" }} />
                 {/* <Stack.Screen name="MyWardrobe" options={{ presentation: "modal" }} /> */}
