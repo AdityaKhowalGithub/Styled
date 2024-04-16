@@ -38,31 +38,37 @@ export default function TabOneScreen() {
         onPress: () => console.log('HELLO'), // <-- "onPress" is apparently required
     };
 
+    // useEffect(() => {
+    const inAuthGroup = segments[0] === "(auth)";
+    // if (!isLoggedIn && !inAuthGroup) {
+    // router.replace("/(auth)/LoginScreen");
+    // } else if (isLoggedIn) {
+    // router.replace("/(tabs)");
+    // }
+
+
+    // const dummyData1 = {
+    // user: 'Chris Tiller',
+    // communityName: 'Y2K mix',
+    // caption: 'Suggestions on shoes that match?',
+    // };
+
+
+    // setTimeout(() => {
+    // setFeedData(dummyData1);
+    // }, 1000);
+    // }, [segments, isLoggedIn, initialized]);
     useEffect(() => {
-        // Check auth state and redirect if needed
-        const inAuthGroup = segments[0] === "(auth)";
-        if (!isLoggedIn && !inAuthGroup) {
-            router.replace("/(auth)/LoginScreen");
-        } else if (isLoggedIn) {
-            router.replace("/(tabs)");
-        }
-
-        // Dummy data for the feed
-        const dummyData1 = {
-            user: 'Chris Tiller',
-            communityName: 'Y2K mix',
-            caption: 'Suggestions on shoes that match?',
-        };
-
-        // Simulating a fetch request with a timeout
         setTimeout(() => {
-            setFeedData(dummyData1);
-        }, 1000);
+            if (!isLoggedIn && !inAuthGroup) {
+                router.replace("/(auth)/LoginScreen");
+            } else if (isLoggedIn) {
+                router.replace("/(tabs)");
+            }
+        }, 500); // Delay for 500 ms
     }, [segments, isLoggedIn, initialized]);
 
-    if (!feedData.user) {
-        return <Text>Loading...</Text>;
-    }
+
     return (
         <ScrollView style={styles.container}>
 
@@ -252,7 +258,7 @@ export default function TabOneScreen() {
 
             </View>
 
-        </ScrollView>
+        </ScrollView >
     );
 };
 
