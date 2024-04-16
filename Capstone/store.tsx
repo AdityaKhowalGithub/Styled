@@ -68,7 +68,7 @@ export const appSignUp = async (email: string, password: string, displayName: st
         });
         return { user: auth.currentUser };
     } catch (e) {
-        return { user: null, error: e as AuthError };  // Include user: null here
+        return { user: null, error: e as AuthError };
     }
 };
 

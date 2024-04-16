@@ -76,7 +76,7 @@ export default function TabLayout() {
                     ),
                 }}
             />
-            {/* Add Tab              <Tabs.Screen
+            {/* Add Tab      */}        <Tabs.Screen
                 name="add"
                 options={{
                     tabBarIcon: ({ focused, color }) => (
@@ -91,10 +91,10 @@ export default function TabLayout() {
                         return <Text style={{ fontSize: 0 }}></Text>;
                     },
                 }}
-            /> */}
+            /> 
 
 
-            {/* Wardrobe Tab */}      <Tabs.Screen
+            {/* Wardrobe Tab   */}    <Tabs.Screen
                 name="Wardrobe"
                 options={{
                     title: "Wardrobe",
@@ -106,10 +106,10 @@ export default function TabLayout() {
                         />
                     ),
                 }}
-            />
+            />   
 
 
-            {/* Profile Tab    */}         <Tabs.Screen
+            {/* Profile Tab    */}      <Tabs.Screen
                 name="profile"
                 options={{
                     title: "Profile",
@@ -121,7 +121,7 @@ export default function TabLayout() {
                         />
                     ),
                 }}
-            />
+            /> 
         </Tabs>
 
     );

@@ -40,33 +40,40 @@ export default function TabOneScreen() {
 
     // useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
+
+    // useEffect(() => {
+    // setTimeout(() => {
     // if (!isLoggedIn && !inAuthGroup) {
     // router.replace("/(auth)/LoginScreen");
     // } else if (isLoggedIn) {
     // router.replace("/(tabs)");
     // }
-
-
-    // const dummyData1 = {
-    // user: 'Chris Tiller',
-    // communityName: 'Y2K mix',
-    // caption: 'Suggestions on shoes that match?',
-    // };
-
-
-    // setTimeout(() => {
-    // setFeedData(dummyData1);
-    // }, 1000);
+    // }, 500); // Delay for 500 ms
     // }, [segments, isLoggedIn, initialized]);
+
+
     useEffect(() => {
+        console.log("isLoggedIn: ", isLoggedIn, " | initialized: ", initialized, " | Segment: ", segments[0]);
         setTimeout(() => {
             if (!isLoggedIn && !inAuthGroup) {
+                console.log("Redirecting to login because user is not logged in and not in auth group");
                 router.replace("/(auth)/LoginScreen");
-            } else if (isLoggedIn) {
-                router.replace("/(tabs)");
-            }
+            } 
+            // else if (isLoggedIn) {
+            //     console.log("Redirecting to tabs because user is logged in");
+            //     router.replace("/(tabs)");
+            // }
         }, 500); // Delay for 500 ms
     }, [segments, isLoggedIn, initialized]);
+
+    // useEffect(() => {
+    //     console.log("isLoggedIn: ", isLoggedIn, " | initialized: ", initialized, " | Segment: ", segments[0]);
+    //     if (!isLoggedIn && !inAuthGroup) {
+    //         console.log("Redirecting to login because user is not logged in and not in auth group");
+    //         router.replace("/(auth)/LoginScreen");
+    //     }
+    // }, [segments, isLoggedIn, initialized]);
+
 
 
     return (

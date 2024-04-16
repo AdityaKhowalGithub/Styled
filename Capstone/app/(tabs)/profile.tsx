@@ -6,9 +6,13 @@ import {
     Image,
     ScrollView,
     TouchableOpacity,
+    Button
 } from "react-native";
 import IMAGES from "@/components/IMAGES";
 import wardrobeCategories from "@/assets/wardrobeItems.json";
+import { AuthStore } from "../../store"; // Ensure you import AuthStore
+import { useRouter } from 'expo-router'; // Ensure you import useRouter
+
 // Import firebase from 'firebase/app';
 // import 'firebase/firestore';
 // import 'firebase/auth';
@@ -37,6 +41,8 @@ const ProfileScreen = ({ userId }) => {
 
     // State to store the selected category
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+    const router = useRouter(); // Use useRouter hook for navigation
 
     useEffect(() => {
         const dummyData = {
@@ -107,6 +113,13 @@ const ProfileScreen = ({ userId }) => {
                 <Text style={styles.lookbooksTitleText}>My Lookbooks</Text>
                 {renderLookbooks()}
             </View>
+            <Button
+                title="Sign Out"
+                onPress={() => {
+                    AuthStore.update(s => { s.isLoggedIn = false; });
+                    router.replace("/(auth)/LoginScreen");
+                }}
+            />
         </ScrollView>
     );
 };
