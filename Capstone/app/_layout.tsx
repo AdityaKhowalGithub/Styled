@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/context/auth";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
     DarkTheme,
@@ -5,12 +6,12 @@ import {
     ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
+import { Stack, Slot, SplashScreen } from "expo-router";
+// import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import MyWardrobeScreen from "@/components/expandWardrobe";
+
 import { useColorScheme } from "@/components/useColorScheme";
-// import LoginScreen from './LoginScreen';
+
 
 
 export {
@@ -55,14 +56,13 @@ function RootLayoutNav() {
 
     return (
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-            <Stack>
-                {/* <Stack.Screen name="Login" component={LoginScreen} />
-                <Stack.Screen name="Signup" />*/}
+            <AuthProvider>
+                <Slot />
+            </AuthProvider>
+            {/* <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-                {/* <Stack.Screen name="MyWardrobe" options={{ presentation: "modal" }} /> */}
-                {/* <Stack.Screen name="Category" options={{ presentation: "modal" }} /> */}
-            </Stack>
+            </Stack> */}
         </ThemeProvider>
     );
 }

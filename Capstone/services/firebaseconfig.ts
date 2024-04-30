@@ -1,47 +1,24 @@
-
-// import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
-// import { getAuth } from "firebase/auth";
-
-
-// const firebaseConfig = {
-// apiKey: "AIzaSyA2PNkfwZTp-7jLRbTKW_4J6VuVSNLhY6c",
-// authDomain: "styled-app.firebaseapp.com",
-// projectId: "styled-app",
-// storageBucket: "styled-app.appspot.com",
-// messagingSenderId: "995344126354",
-// appId: "1:995344126354:web:2b45f5af79dd2d7f29714b",
-// measurementId: "G-PV12N95TMM"
-// };
-
-
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
-// const auth = getAuth(app);
-
-// export { app, auth };
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
-import AsyncStorage from '@react-native-async-storage/async-storage';  // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, WEB_CLIENT_ID } from '@env';
 
-// Your web app's Firebase configuration
+// GoogleSignin.configure({
+// webClientId: WEB_CLIENT_ID,
+// });
+
 const firebaseConfig = {
-    apiKey: "AIzaSyA2PNkfwZTp-7jLRbTKW_4J6VuVSNLhY6c",
-    authDomain: "styled-app.firebaseapp.com",
-    projectId: "styled-app",
-    storageBucket: "styled-app.appspot.com",
-    messagingSenderId: "995344126354",
-    appId: "1:995344126354:web:2b45f5af79dd2d7f29714b",
-    measurementId: "G-PV12N95TMM"
+    apiKey: API_KEY,
+    authDomain: AUTH_DOMAIN,
+    projectId: PROJECT_ID,
+    storageBucket: STORAGE_BUCKET,
+    messagingSenderId: MESSAGING_SENDER_ID,
+    appId: APP_ID,
+    measurementId: MEASUREMENT_ID
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
-
-// Initialize Auth with AsyncStorage persistence
 const auth = initializeAuth(app, {
     persistence: getReactNativePersistence(AsyncStorage)
 });
