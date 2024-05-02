@@ -94,7 +94,8 @@ export default function TabLayout() {
             /> 
 
 
-            {/* Wardrobe Tab   */}    <Tabs.Screen
+            {/* Wardrobe Tab   */}   
+            <Tabs.Screen
                 name="Wardrobe"
                 options={{
                     title: "Wardrobe",
@@ -109,7 +110,8 @@ export default function TabLayout() {
             />   
 
 
-            {/* Profile Tab    */}      <Tabs.Screen
+            {/* Profile Tab    */}      
+            <Tabs.Screen
                 name="profile"
                 options={{
                     title: "Profile",

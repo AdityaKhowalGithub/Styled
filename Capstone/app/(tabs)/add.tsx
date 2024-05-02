@@ -1,24 +1,25 @@
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Alert, View, Text, TouchableOpacity, Image, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { Camera } from 'expo-camera';
-import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import { auth, storage, imagesRef } from '@/services/firebaseconfig';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+// import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
+import FormData from 'form-data';
+import { BG_API_KEY } from '@env';
+// import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+// import { getAuth } from 'firebase/auth';
+import { Buffer } from 'buffer';
 
+interface Props {}
 
-const AddPieceScreen = () => {
-  const navigation = useNavigation();
-  React.useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
-  const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState('');
-  const [size, setSize] = useState('');
-  const [brand, setBrand] = useState('');
-  const [photo, setPhoto] = useState(null);
-  const cameraRef = useRef(null);
-
-  // Request camera permissions
+const AddPieceScreen: React.FC<Props> = () => {
+  // const navigation = useNavigation();
+  const [hasPermission, setHasPermission] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
+  const cameraRef = useRef<Camera>(null);
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -26,140 +27,201 @@ const AddPieceScreen = () => {
     })();
   }, []);
 
-  const handleTakePicture = async () => {
-    if (cameraRef.current) {
-      const options = { quality: 0.5, base64: true, skipProcessing: true };
-      const data = await cameraRef.current.takePictureAsync(options);
-      setPhoto(data);
-      // Navigate to another screen or update state here if needed
-    }
-  };
-  const handleRetakePicture = () => {
-    setPhoto(null);
-  };
-  const handleSavePiece = () => {
-    // Save the piece to your state or backend
-    alert('Piece saved!');
-    // Reset the state and navigate if necessary
-    setType('');
-    setSize('');
-    setBrand('');
-    setPhoto(null);
-  };
-
-  if (hasPermission === null) {
-    return <View />;
-  }
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets) {
+      const uri = result.assets[0].uri;
+      setImage(uri);
+      removeBackground(uri);
+    }
+  };
+
+  const handleTakePicture = async () => {
+    if (cameraRef.current) {
+      const options = { quality: 0.5, base64: true, skipProcessing: true };
+      const data = await cameraRef.current.takePictureAsync(options);
+      setImage(data.uri);
+      removeBackground(data.uri);
+    }
+  };
+
+ const removeBackground = async (imageUri: string) => {
+  const formData = new FormData();
+  const response = await fetch(imageUri);
+  const blob = await response.blob();
+  const fileType = imageUri.split('.').pop() ?? 'jpg';
+
+  formData.append('size', 'auto');
+  formData.append('image_file', blob, `photo.${fileType}`);
+
+  try {
+    const axiosResponse = await axios({
+      method: 'post',
+      url: 'https://api.remove.bg/v1.0/removebg',
+      data: formData,
+      headers: {
+        'X-Api-Key': BG_API_KEY,
+      },
+      responseType: 'arraybuffer',
+    });
+
+    if (axiosResponse.status === 200) {
+      const imageBase64 = Buffer.from(axiosResponse.data, 'binary').toString('base64');
+      const newImageUri = `data:image/${fileType};base64,${imageBase64}`;
+      setImage(newImageUri);
+    }
+ } catch (error) {
+  if (error.response) {
+    console.error('Request failed with status:', error.response.status);
+    console.error('Response data:', error.response.data);
+    Alert.alert('Error with remove.bg API:', JSON.stringify(error.response.data));
+  } else {
+    console.error('Request failed:', error.message);
+  }
+}
+
+}; 
+
+
+//     const removeBackground = async (imageUri: string) => {
+//   const formData = new FormData();
+//   const response = await fetch(imageUri);
+//   const blob = await response.blob();
+//   const fileType = imageUri.split('.').pop() ?? 'jpg';
+//   const fileName = `photo.${fileType}`;
+//
+//   formData.append('size', 'auto');
+//   formData.append('image_file', blob, fileName); // Corrected usage
+//
+//   try {
+//     const response = await axios({
+//       method: 'post',
+//       url: 'https://api.remove.bg/v1.0/removebg',
+//       data: formData,
+//       responseType: 'arraybuffer',
+//       headers: {
+//         'X-Api-Key': BG_API_KEY, // Ensure your API key is correctly configured in your env variables
+//       },
+//     });
+//
+//     if (response.status === 200) {
+//       const imageBase64 = Buffer.from(response.data, 'binary').toString('base64');
+//       const newImageUri = `data:image/${fileType};base64,${imageBase64}`;
+//       setImage(newImageUri);
+//     }
+//   } catch ( error ) {
+//     console.error('Request failed:', error);
+//   }
+// };
+ const handleSaveToFirebase = async () => {
+    if (!image) {
+        Alert.alert('No image to save');
+        return;
+    }
+
+    try {
+        const response = await fetch(image);
+        const blob = await response.blob();
+        
+        // Use the Firebase storage reference to upload the file
+        const user = auth.currentUser;
+        if (!user) {
+            Alert.alert('You must be logged in to save images.');
+            return;
+        }
+        
+        const imageRef = ref(imagesRef, `${user.uid}/${new Date().toISOString()}.jpg`);
+        
+        // Upload the blob
+        const snapshot = await uploadBytes(imageRef, blob);
+        
+        // Get the URL of the uploaded image
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        console.log('File available at', downloadURL);
+        Alert.alert('Image saved successfully!', `File available at ${downloadURL}`);
+    } catch (error) {
+        console.error('Error saving the image:', error);
+        Alert.alert('Error saving the image. Please try again.');
+    }
+};
+
   return (
     <View style={styles.container}>
-      {photo ? (
+      {image ? (
         <ScrollView style={styles.scrollView}>
-          <Image source={{ uri: photo.uri }} style={styles.previewImage} />
-          <View style={styles.formContainer}>
-            <Text style={styles.label}>Type</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter type of piece"
-              value={type}
-              onChangeText={setType}
-            />
-            <Text style={styles.label}>Size</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter size"
-              value={size}
-              onChangeText={setSize}
-            />
-            <Text style={styles.label}>Brand</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter brand"
-              value={brand}
-              onChangeText={setBrand}
-            />
-            {/* Add additional input fields as necessary */}
-            <TouchableOpacity style={styles.saveButton} onPress={handleSavePiece}>
-              <Text style={styles.saveButtonText}>Save Piece</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.retakeButton} onPress={handleRetakePicture}>
-              <Text style={styles.retakeButtonText}>Retake Picture</Text>
-            </TouchableOpacity>
-          </View>
+          <Image source={{ uri: image }} style={styles.previewImage} />
+          <TouchableOpacity style={styles.saveButton} onPress={handleSaveToFirebase}>
+            <Text style={styles.saveButtonText}>Save Piece</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.retakeButton} onPress={() => setImage}>
+
+                      <Text style={styles.retakeButtonText}>Retake Picture</Text>
+          </TouchableOpacity>
         </ScrollView>
       ) : (
-
-        <View style={styles.container}>
-          <View style={styles.cameraWrapper}>
-            <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef}>
-              <View style={styles.overlay}>
-                {/* <View style={styles.overlayBox} /> */}
-
-                <View style={[styles.corner, styles.topLeftCorner, { top: 0, left: 0 }]} />
-                <View style={[styles.corner, styles.topRightCorner, { top: 0, right: 0 }]} />
-                <View style={[styles.corner, styles.bottomLeftCorner, { bottom: 0, left: 0 }]} />
-                <View style={[styles.corner, styles.bottomRightCorner, { bottom: 0, right: 0 }]} />
-                <Text style={styles.instructionsText}>Make sure your piece is within this box!</Text>
-
-                <Text style={styles.instructionsText}>Make sure your piece is within this box!</Text>
-              </View>
-
-            </Camera>
-          </View>
+        // When there is no image, show camera view or image picker option
+        <View style={styles.cameraWrapper}>
+          <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef}>
+            <View style={styles.overlay}>
+              <Text style={styles.instructionsText}>Align your piece within the frame and tap the button below to capture.</Text>
+            </View>
+          </Camera>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={handleTakePicture}>
-
+              <Text style={styles.buttonText}>Capture</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={pickImage}>
+              <Text style={styles.buttonText}>Pick Image</Text>
             </TouchableOpacity>
           </View>
         </View>
-
-
       )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
-    backgroundColor: 'white', // Set the background color of the whole screen
+    backgroundColor: 'white',
   },
-
   cameraWrapper: {
-    width: '80%', // Adjust the width to what you want
-    alignSelf: 'center', // This will center the cameraWrapper
-    marginTop: 100, // Add some margin at the top
-    aspectRatio: 0.5625, // Keep the aspect ratio of the cameraWrapper
-    borderWidth: 1, // Add a border to see the box clearly
-    borderColor: 'black', // Set the border color
-  },
-  camera: {
-    flex: 1, // Camera should fill the entire space of its container
-  },
-  buttonContainer: {
-    position: 'absolute', // This positions your button container absolutely within its parent
-    left: 0, // Aligns the container to the left
-    right: 0, // Aligns the container to the right
-    bottom: 20, // Positions the container 20 pixels from the bottom of the screen
-    justifyContent: 'center', // Centers the button horizontally
-    alignItems: 'center', // Centers the button vertically (useful if the container has a height)
-  },
-  button: {
-    width: 70, // A typical size for a camera button
-    height: 70, // A typical size for a camera button
+    flex: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#4A4A4A', // Camera button is usually white
-    borderRadius: 35, // This will make it round
-    // Add shadows or other styling as needed
   },
-  text: {
+  camera: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 20,
+    justifyContent: 'center',
+    width: '100%',
+  },
+  button: {
+    marginHorizontal: 10,
+    backgroundColor: '#4A90E2',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
     fontSize: 18,
-    color: 'black', // Text is usually black on a white button
   },
   overlay: {
     position: 'absolute',
@@ -170,95 +232,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  overlayBox: {
-    width: '90%',
-    height: '90%',
-    borderWidth: 2,
-    borderColor: 'white',
-    backgroundColor: 'transparent',
-  },
   instructionsText: {
-    position: 'absolute',
-    top: '50%', // Center vertically
-    alignSelf: 'center', // Center horizontally
-    color: '#000000',
-    opacity: 0.5, // Make the text semi-transparent
+    color: '#FFFFFF',
+    fontSize: 16,
     textAlign: 'center',
-    paddingHorizontal: 20, // Make sure the text doesn't touch the sides
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 10,
   },
-
   scrollView: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   previewImage: {
     width: '100%',
     height: 300,
     resizeMode: 'contain',
   },
-  formContainer: {
-    padding: 20,
-  },
-  label: {
-    fontSize: 16,
-    color: 'black',
-    marginBottom: 10,
-  },
-  input: {
-    fontSize: 18,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 20,
-    padding: 10,
-    borderRadius: 5,
-    color: 'black',
-  },
   saveButton: {
-    backgroundColor: 'blue',
+    backgroundColor: 'green',
     padding: 15,
     borderRadius: 5,
+    margin: 10,
     alignItems: 'center',
   },
   saveButtonText: {
+    color: 'white',
     fontSize: 18,
-    color: '#fff',
   },
   retakeButton: {
     backgroundColor: 'red',
     padding: 15,
     borderRadius: 5,
+    margin: 10,
     alignItems: 'center',
-    marginTop: 10, // Add some margin at the top if needed
   },
   retakeButtonText: {
+    color: 'white',
     fontSize: 18,
-    color: '#fff',
   },
-
-
-  corner: {
-    position: 'absolute',
-    width: 30, // Width of the corner
-    height: 30, // Height of the corner
-    borderColor: 'white', // Corner color
-  },
-  topLeftCorner: {
-    borderTopWidth: 5, // Thickness of the border
-    borderLeftWidth: 5, // Thickness of the border
-  },
-  topRightCorner: {
-    borderTopWidth: 5,
-    borderRightWidth: 5,
-  },
-  bottomLeftCorner: {
-    borderBottomWidth: 5,
-    borderLeftWidth: 5,
-  },
-  bottomRightCorner: {
-    borderBottomWidth: 5,
-    borderRightWidth: 5,
-  },
-
 });
 
 export default AddPieceScreen;
+

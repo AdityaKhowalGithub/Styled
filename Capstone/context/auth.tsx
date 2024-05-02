@@ -1,3 +1,4 @@
+
 /**
  *
  * This file was strongly inspired by expo docs guide: https://docs.expo.dev/router/reference/authentication
@@ -118,3 +119,4 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
         </AuthContext.Provider>
     );
 }
+
