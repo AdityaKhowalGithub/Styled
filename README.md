@@ -40,3 +40,15 @@ name-<issue>-<description>: Personal branch for any contributors to open up for 
 
 ![image](https://github.com/AdityaKhowalGithub/Styled/assets/108611217/71d6cbbb-f49e-4899-826c-5cdbfd40ac38)
 
+
+# For Future capstone teams
+Styled is an innovative fashion app focused on promoting sustainable and diverse fashion practices. As a future developer on this project, you'll contribute to a platform that combines wardrobe management, community engagement, and sustainability education. The app leverages React Native for frontend development and Firebase for backend services, including database and authentication. You will find resources like high-fidelity prototypes, user flow scenarios, and sustainability criteria in our comprehensive Figma and Google Drive documentation. Your role will involve enhancing features such as the wardrobe wheel, community forums, and sustainability guides, as well as potentially developing new features like clothing swaps and style analytics. The project's codebase is hosted on GitHub, and you can set up your development environment by following the installation steps provided. This setup supports various testing methods, including local simulation and mobile testing through the Expo Go app. Your contributions will help drive Styled towards a more inclusive and environmentally conscious fashion industry.
+
+
+# Final Presenation:
+![Final presentation](https://docs.google.com/presentation/d/1LNWOcVnUdSSHF9-MkBvJdCmJormuY4zVG4IwZMMC9U8/edit?usp=sharing)
+
+
+# Liscense:
+Check repo 
+
