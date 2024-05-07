@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Alert, View, Text, TouchableOpacity, Image, TextInput, StyleSheet, ScrollView } from 'react-native';
+import { Alert, View, Text, TouchableOpacity, Image, TextInput, StyleSheet, ScrollView, Button } from 'react-native';
 import { Camera } from 'expo-camera';
+import { Picker } from '@react-native-picker/picker';
 import { auth, storage, imagesRef } from '@/services/firebaseconfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
@@ -19,6 +20,7 @@ const AddPieceScreen: React.FC<Props> = () => {
   // const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(false);
   const [image, setImage] = useState<string | null>(null);
+  const [category, setCategory] = useState<String | null>(null);
   const cameraRef = useRef<Camera>(null);
   useEffect(() => {
     (async () => {
@@ -93,36 +95,6 @@ const AddPieceScreen: React.FC<Props> = () => {
 }; 
 
 
-//     const removeBackground = async (imageUri: string) => {
-//   const formData = new FormData();
-//   const response = await fetch(imageUri);
-//   const blob = await response.blob();
-//   const fileType = imageUri.split('.').pop() ?? 'jpg';
-//   const fileName = `photo.${fileType}`;
-//
-//   formData.append('size', 'auto');
-//   formData.append('image_file', blob, fileName); // Corrected usage
-//
-//   try {
-//     const response = await axios({
-//       method: 'post',
-//       url: 'https://api.remove.bg/v1.0/removebg',
-//       data: formData,
-//       responseType: 'arraybuffer',
-//       headers: {
-//         'X-Api-Key': BG_API_KEY, // Ensure your API key is correctly configured in your env variables
-//       },
-//     });
-//
-//     if (response.status === 200) {
-//       const imageBase64 = Buffer.from(response.data, 'binary').toString('base64');
-//       const newImageUri = `data:image/${fileType};base64,${imageBase64}`;
-//       setImage(newImageUri);
-//     }
-//   } catch ( error ) {
-//     console.error('Request failed:', error);
-//   }
-// };
  const handleSaveToFirebase = async () => {
     if (!image) {
         Alert.alert('No image to save');
@@ -140,13 +112,10 @@ const AddPieceScreen: React.FC<Props> = () => {
             return;
         }
         
-        const imageRef = ref(imagesRef, `${user.uid}/${new Date().toISOString()}.jpg`);
-        
-        // Upload the blob
+        const imageRef = ref(imagesRef, `${user.uid}/clothes/${category}/${new Date().toISOString()}.jpg`);
         const snapshot = await uploadBytes(imageRef, blob);
-        
-        // Get the URL of the uploaded image
         const downloadURL = await getDownloadURL(snapshot.ref);
+
         console.log('File available at', downloadURL);
         Alert.alert('Image saved successfully!', `File available at ${downloadURL}`);
     } catch (error) {
@@ -158,16 +127,25 @@ const AddPieceScreen: React.FC<Props> = () => {
   return (
     <View style={styles.container}>
       {image ? (
-        <ScrollView style={styles.scrollView}>
-          <Image source={{ uri: image }} style={styles.previewImage} />
-          <TouchableOpacity style={styles.saveButton} onPress={handleSaveToFirebase}>
-            <Text style={styles.saveButtonText}>Save Piece</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.retakeButton} onPress={() => setImage}>
-
-                      <Text style={styles.retakeButtonText}>Retake Picture</Text>
-          </TouchableOpacity>
-        </ScrollView>
+       <ScrollView style={styles.scrollView}>
+       <Image source={{ uri: image }} style={styles.previewImage} />
+       <Picker
+         selectedValue={category}
+         onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+         style={styles.picker}
+       >
+         <Picker.Item label="Top" value="tops" />
+         <Picker.Item label="Outerwear" value="outerwear" />
+         <Picker.Item label="Shoes" value="shoes" />
+         <Picker.Item label="Dresses" value="dresses" />
+       </Picker>
+       <TouchableOpacity style={styles.saveButton} onPress={handleSaveToFirebase}>
+         <Text style={styles.saveButtonText}>Save Piece</Text>
+       </TouchableOpacity>
+       <TouchableOpacity style={styles.retakeButton} onPress={() => setImage(null)}>
+         <Text style={styles.retakeButtonText}>Retake Picture</Text>
+       </TouchableOpacity>
+     </ScrollView>
       ) : (
         // When there is no image, show camera view or image picker option
         <View style={styles.cameraWrapper}>

@@ -6,7 +6,7 @@ import { Text, View } from "@/components/Themed";
 import WelcomeSection from "@/components/WardrobeWelcome"; // Adjust the path as necessary
 import wardrobeItems from "@/assets/wardrobeItems.json";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -18,10 +18,45 @@ import wardrobeCategories from "@/assets/wardrobeItems.json";
 // import MyModal from "@/components/WardrobeModel";
 import WardrobeModal from "@/components/WardrobeModel";
 import LookbookModal from "@/components/LookbookModel";
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+
+const fetchCategories = async () => {
+  const db = getFirestore();
+  const categoryCol = collection(db, 'categories'); // 'categories' should be your collection
+  const categorySnapshot = await getDocs(categoryCol);
+  const categories = categorySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return categories;
+};
+
+interface Item {
+  id: string;
+  // Add other properties here
+}
+
+const fetchItems = async (category: string): Promise<Item[]> => {
+  const db = getFirestore();
+  const itemsCol = collection(db, `categories/${category}/items`); // Adjust path as needed
+  const itemsSnapshot = await getDocs(itemsCol);
+  const items = itemsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Item));
+  return items;
+};
 export default function TabOneScreen() {
   const navigation = useNavigation();
   const [WmodalVisible, WsetModalVisible] = useState(false);
   const [lmodalVisible, lsetModalVisible] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [wardrobeItems, setWardrobeItems] = useState({});
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+    fetchCategories().then(categories => {
+      setCategories(categories);
+      categories.forEach(category => {
+        fetchItems(category.id).then(items => {
+          setWardrobeItems(prev => ({ ...prev, [category.name]: items }));
+        });
+      });
+    });
+  }, [navigation]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -30,6 +65,14 @@ export default function TabOneScreen() {
 
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
+      <WelcomeSection />
+      <SummaryContainer />
+      {categories.map(category => (
+        <View key={category.id}>
+          <Text style={styles.wardrobeHeaderText}>{`${category.name} >`}</Text>
+          <HorizontalScrollView items={wardrobeItems[category.name]} />
+        </View>
+      ))}
         {/* <MyModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
