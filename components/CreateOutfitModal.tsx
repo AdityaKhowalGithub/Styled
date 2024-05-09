@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, Image, StyleSheet, FlatList } from 'react-native';
-import { ref, getDownloadURL } from 'firebase/storage';
+import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import { FirebaseError } from 'firebase/app';
 import { getUserImagesRef } from '@/services/firebaseconfig';
 
-const CreateOutfitModal = ({ visible, onClose, categories }) => {
-  const [selections, setSelections] = useState({});
-  const [categoryImages, setCategoryImages] = useState({});
+interface CreateOutfitModalProps {
+  visible: boolean;
+  onClose: () => void;
+  categories: string[];
+}
 
-  const fetchImagesForCategory = async (category) => {
+const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose, categories }) => {
+  const [selections, setSelections] = useState<Record<string, string>>({});
+  const [categoryImages, setCategoryImages] = useState<Record<string, string[]>>({});
+
+  const fetchImagesForCategory = async (category: string) => {
     try {
       const userImagesRef = getUserImagesRef();
       const categoryRef = ref(userImagesRef, `clothes/${category}`);
@@ -24,11 +30,11 @@ const CreateOutfitModal = ({ visible, onClose, categories }) => {
     }
   };
 
-  const handleSelectItem = (category, url) => {
+  const handleSelectItem = (category: string, url: string) => {
     setSelections(prev => ({ ...prev, [category]: url }));
   };
 
-  const renderCategoryItems = ({ item, index }) => (
+  const renderCategoryItems = ({ item }: { item: string }) => (
     <TouchableOpacity onPress={() => handleSelectItem(currentCategory, item)}>
       <Image source={{ uri: item }} style={styles.imageThumbnail} />
     </TouchableOpacity>
@@ -51,6 +57,13 @@ const CreateOutfitModal = ({ visible, onClose, categories }) => {
             />
           </View>
         ))}
+        <View style={styles.outfitPreview}>
+          {['shoes', 'tops', 'dresses', 'outerwear'].map((category) => (
+            selections[category] && (
+              <Image key={category} source={{ uri: selections[category] }} style={[styles.imagePreview, { zIndex: categories.indexOf(category) }]} />
+            )
+          ))}
+        </View>
         <TouchableOpacity style={styles.button} onPress={onClose}>
           <Text style={styles.buttonText}>Close</Text>
         </TouchableOpacity>
@@ -61,11 +74,11 @@ const CreateOutfitModal = ({ visible, onClose, categories }) => {
 
 const styles = StyleSheet.create({
   modalView: {
-    marginTop: 50,
+    flex: 1,
     padding: 20,
     backgroundColor: 'white',
-    alignItems: 'center',
-  },
+    marginTop: 30,
+},
   imageThumbnail: {
     width: 100,
     height: 100,
@@ -84,7 +97,20 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: 'center'
+  },
+  outfitPreview: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    width: 100,
+    height: 300,
+  },
+  imagePreview: {
+    position: 'absolute',
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
   }
 });
 
