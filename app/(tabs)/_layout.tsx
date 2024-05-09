@@ -1,8 +1,3 @@
-
-
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
 import {
   AntDesign,
   MaterialCommunityIcons,
@@ -11,8 +6,7 @@ import {
 import { Tabs } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Text } from "react-native";
-import { View } from "react-native";
-// Custom hook to get window dimensions
+
 function useWindowDimensions() {
   const [windowDimensions, setWindowDimensions] = useState(
       Dimensions.get("window"),
@@ -51,7 +45,6 @@ export default function TabLayout() {
               
           }}
       >
-          {/* Home Tab */}
           <Tabs.Screen
               name="index"
               options={{
@@ -65,7 +58,6 @@ export default function TabLayout() {
                   ),
               }}
           />
-          {/* Community Tab   */}
           <Tabs.Screen
               name="Communities"
               options={{
@@ -79,7 +71,7 @@ export default function TabLayout() {
                   ),
               }}
           />
-          {/* Add Tab      */}        <Tabs.Screen
+     <Tabs.Screen
               name="add"
               options={{
                   tabBarIcon: ({ focused, color }) => (
@@ -94,10 +86,7 @@ export default function TabLayout() {
                       return <Text style={{ fontSize: 0 }}></Text>;
                   },
               }}
-          /> 
-
-
-          {/* Wardrobe Tab   */}   
+          />   
           <Tabs.Screen
               name="Wardrobe"
               options={{
@@ -110,10 +99,7 @@ export default function TabLayout() {
                       />
                   ),
               }}
-          />   
-
-
-          {/* Profile Tab    */}      
+          />  
           <Tabs.Screen
               name="profile"
               options={{
