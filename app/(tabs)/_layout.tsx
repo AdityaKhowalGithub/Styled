@@ -36,6 +36,7 @@ export default function TabLayout() {
   return (
       <Tabs
           screenOptions={{
+              headerShown: false, // Hide the header
               tabBarActiveTintColor: "#684440", // Highlight color for the active tab
               tabBarInactiveTintColor: "#837B82", // Color for inactive tabs
               tabBarStyle: {
