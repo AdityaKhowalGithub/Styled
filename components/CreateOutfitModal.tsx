@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal, View, Text, TouchableOpacity, Image, StyleSheet, FlatList } from 'react-native';
-import { ref, listAll, getDownloadURL } from 'firebase/storage';
+import { captureRef } from 'react-native-view-shot';
+import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
+import { ref as storageRef, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 import { FirebaseError } from 'firebase/app';
 import { getUserImagesRef } from '@/services/firebaseconfig';
+import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
 
 interface CreateOutfitModalProps {
   visible: boolean;
@@ -13,17 +17,18 @@ interface CreateOutfitModalProps {
 const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose, categories }) => {
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [categoryImages, setCategoryImages] = useState<Record<string, string[]>>({});
+  const outfitPreviewRef = useRef<View>(null);
 
   useEffect(() => {
     categories.forEach(category => {
       fetchImagesForCategory(category);
     });
-  }, [visible]);  // Assuming you want to refetch when the modal becomes visible
+  }, [visible]);
 
   const fetchImagesForCategory = async (category: string) => {
     try {
       const userImagesRef = getUserImagesRef();
-      const categoryRef = ref(userImagesRef, `clothes/${category}`);
+      const categoryRef = storageRef(userImagesRef, `clothes/${category}`);
       const response = await listAll(categoryRef);
       const urls = await Promise.all(response.items.map(item => getDownloadURL(item)));
       setCategoryImages(prev => ({ ...prev, [category]: urls }));
@@ -38,6 +43,28 @@ const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose,
 
   const handleSelectItem = (category: string, url: string) => {
     setSelections(prev => ({ ...prev, [category]: url }));
+  };
+
+  const handleSaveOutfit = async () => {
+    if (outfitPreviewRef.current) {
+      const uri = await captureRef(outfitPreviewRef.current, {
+        format: 'jpg',
+        quality: 0.8,
+      });
+
+      const blob = await (await fetch(uri)).blob();
+      const userImagesRef = getUserImagesRef();
+      const outfitRef = storageRef(userImagesRef, `clothes/outfits/${Date.now()}.jpg`);
+
+      uploadBytes(outfitRef, blob).then(snapshot => {
+        getDownloadURL(snapshot.ref).then(url => {
+          console.log('Saved outfit URL:', url);
+          onClose();  // Close modal after saving
+        });
+      }).catch(error => {
+        console.error('Upload error:', error);
+      });
+    }
   };
 
   const renderCategoryItems = (category: string) => ({ item }: { item: string }) => (
@@ -60,17 +87,21 @@ const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose,
             />
           </View>
         ))}
-        <View style={styles.outfitPreview}>
+        <View ref={outfitPreviewRef} style={styles.outfitPreview}>
           {['shoes', 'tops', 'dresses', 'outerwear'].map((category, index) => (
             selections[category] && (
               <Image key={category} source={{ uri: selections[category] }} style={[styles.imagePreview, { zIndex: categories.length - index }]} />
             )
           ))}
         </View>
+        <TouchableOpacity style={styles.button} onPress={handleSaveOutfit}>
+          <Text style={styles.buttonText}>Save Outfit</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={onClose}>
           <Text style={styles.buttonText}>Close</Text>
         </TouchableOpacity>
       </View>
+      
     </Modal>
   );
 };
@@ -80,7 +111,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: 'white',
-    marginTop: 50,
+  },
+  outfitPreview: {
+    width: 300,
+    height: 300,
+    position: 'relative',
+    marginBottom: 20,
   },
   imageThumbnail: {
     width: 100,
@@ -96,23 +132,17 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#2196F3',
     borderRadius: 10,
+    marginTop: 10,
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
     textAlign: 'center'
   },
-  outfitPreview: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-    width: 100,
-    height: 300,
-  },
   imagePreview: {
     position: 'absolute',
-    width: 100,
-    height: 100,
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   }
 });
