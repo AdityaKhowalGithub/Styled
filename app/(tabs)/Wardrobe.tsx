@@ -4,11 +4,14 @@ import ImageGridModal from '@/components/ImageGridModal';
 import { ref, listAll, getDownloadURL } from "firebase/storage";
 import { FirebaseError } from 'firebase/app';
 import { getUserImagesRef } from '@/services/firebaseconfig';
+import CreateOutfitModal from '@/components/CreateOutfitModal';
+const categories = ['tops', 'outerwear', 'shoes', 'dresses'];
 
 const TabOneScreen = () => {
   const [imageGridVisible, setImageGridVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [categoryPreviews, setCategoryPreviews] = useState([]);
+  const [createOutfitVisible, setCreateOutfitVisible] = useState(false);
 
   useEffect(() => {
     const fetchPreviewImages = async () => {
@@ -80,6 +83,14 @@ const TabOneScreen = () => {
         visible={imageGridVisible}
         onClose={() => setImageGridVisible(false)}
         images={selectedImages}
+      />
+      <TouchableOpacity style={styles.specialButton} onPress={() => setCreateOutfitVisible(true)}>
+        <Text style={styles.buttonText}>Create an Outfit</Text>
+      </TouchableOpacity>
+      <CreateOutfitModal
+        visible={createOutfitVisible}
+        onClose={() => setCreateOutfitVisible(false)}
+        categories={['tops', 'outerwear', 'shoes', 'dresses']}
       />
     </SafeAreaView>
   );
