@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TouchableOpacity, Image, StyleSheet, FlatList } from 'react-native';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import { FirebaseError } from 'firebase/app';
@@ -13,6 +13,12 @@ interface CreateOutfitModalProps {
 const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose, categories }) => {
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [categoryImages, setCategoryImages] = useState<Record<string, string[]>>({});
+
+  useEffect(() => {
+    categories.forEach(category => {
+      fetchImagesForCategory(category);
+    });
+  }, [visible]);  // Assuming you want to refetch when the modal becomes visible
 
   const fetchImagesForCategory = async (category: string) => {
     try {
@@ -34,8 +40,8 @@ const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose,
     setSelections(prev => ({ ...prev, [category]: url }));
   };
 
-  const renderCategoryItems = ({ item }: { item: string }) => (
-    <TouchableOpacity onPress={() => handleSelectItem(currentCategory, item)}>
+  const renderCategoryItems = (category: string) => ({ item }: { item: string }) => (
+    <TouchableOpacity onPress={() => handleSelectItem(category, item)}>
       <Image source={{ uri: item }} style={styles.imageThumbnail} />
     </TouchableOpacity>
   );
@@ -46,21 +52,18 @@ const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose,
         {categories.map(category => (
           <View key={category}>
             <Text style={styles.header}>{category.toUpperCase()}</Text>
-            <TouchableOpacity onPress={() => fetchImagesForCategory(category)}>
-              <Text>Load {category}</Text>
-            </TouchableOpacity>
             <FlatList
               data={categoryImages[category]}
-              renderItem={renderCategoryItems}
-              keyExtractor={(item, idx) => idx.toString()}
+              renderItem={renderCategoryItems(category)}
+              keyExtractor={(item, idx) => `${category}-${idx}`}
               horizontal
             />
           </View>
         ))}
         <View style={styles.outfitPreview}>
-          {['shoes', 'tops', 'dresses', 'outerwear'].map((category) => (
+          {['shoes', 'tops', 'dresses', 'outerwear'].map((category, index) => (
             selections[category] && (
-              <Image key={category} source={{ uri: selections[category] }} style={[styles.imagePreview, { zIndex: categories.indexOf(category) }]} />
+              <Image key={category} source={{ uri: selections[category] }} style={[styles.imagePreview, { zIndex: categories.length - index }]} />
             )
           ))}
         </View>
@@ -77,8 +80,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: 'white',
-    marginTop: 30,
-},
+    marginTop: 50,
+  },
   imageThumbnail: {
     width: 100,
     height: 100,
