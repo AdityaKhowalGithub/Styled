@@ -1,70 +1,402 @@
-import { Image, StyleSheet, Platform } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableHighlight, Alert, Button, Modal, Pressable, TextInput } from 'react-native';
+import { AuthStore } from "../../store";
+import { useRouter, useSegments } from "expo-router";
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+export default function TabOneScreen() {
+    const { initialized, isLoggedIn } = AuthStore.useState();
+    const segments = useSegments();
+    const router = useRouter();
+
+    const [feedData, setFeedData] = useState({
+        user: '',
+        communityName: '',
+        caption: '',
+    });
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [text, onChangeText] = useState('');
+
+    const [isPress, setIsPress] = useState(false);
+
+    const IMAGES = {
+        "christiller": require("@/assets/images/christillerpfp.png"),
+        "post": require("@/assets/images/postpic.png"),
+        "comment": require("@/assets/images/comment.png"),
+        "like": require("@/assets/images/like.png"),
+        "styledpfp": require("@/assets/images/styledpfp.png"),
+        "styledpost": require("@/assets/images/styledpost.jpg"),
+    };
+
+    const touchProps = {
+        activeOpacity: 1,
+        underlayColor: 'red', // <-- "backgroundColor" will be always overwritten by "underlayColor"
+        style: isPress ? styles.btnPress : styles.btnNormal, // <-- but you can still apply other style changes
+        onHideUnderlay: () => setIsPress(false),
+        onShowUnderlay: () => setIsPress(true),
+        onPress: () => console.log('HELLO'), // <-- "onPress" is apparently required
+    };
+
+    // useEffect(() => {
+    const inAuthGroup = segments[0] === "(auth)";
+
+    // useEffect(() => {
+    // setTimeout(() => {
+    // if (!isLoggedIn && !inAuthGroup) {
+    // router.replace("/(auth)/LoginScreen");
+    // } else if (isLoggedIn) {
+    // router.replace("/(tabs)");
+    // }
+    // }, 500); // Delay for 500 ms
+    // }, [segments, isLoggedIn, initialized]);
+
+
+    useEffect(() => {
+        console.log("isLoggedIn: ", isLoggedIn, " | initialized: ", initialized, " | Segment: ", segments[0]);
+        setTimeout(() => {
+            if (!isLoggedIn && !inAuthGroup) {
+                console.log("Redirecting to login because user is not logged in and not in auth group");
+                router.replace("/(auth)/LoginScreen");
+            } 
+            // else if (isLoggedIn) {
+            //     console.log("Redirecting to tabs because user is logged in");
+            //     router.replace("/(tabs)");
+            // }
+        }, 500); // Delay for 500 ms
+    }, [segments, isLoggedIn, initialized]);
+
+    // useEffect(() => {
+    //     console.log("isLoggedIn: ", isLoggedIn, " | initialized: ", initialized, " | Segment: ", segments[0]);
+    //     if (!isLoggedIn && !inAuthGroup) {
+    //         console.log("Redirecting to login because user is not logged in and not in auth group");
+    //         router.replace("/(auth)/LoginScreen");
+    //     }
+    // }, [segments, isLoggedIn, initialized]);
+
+
+
+    return (
+        <ScrollView style={styles.container}>
+
+            <View style={styles.headerContainer}>
+                <Text style={styles.header}>Activity</Text>
+            </View>
+            <View style={styles.postContainer}>
+                <View style={styles.centerContainer}>
+                    <View style={styles.postHead}>
+                        <Image
+                            style={styles.profileImage}
+                            source={IMAGES["christiller"]}
+                        />
+                        <Text style={styles.postText}>
+                            <Text style={styles.name}>{feedData.user} posts in {feedData.communityName}</Text>
+                        </Text>
+                    </View>
+                    <Image
+                        style={styles.postImage}
+                        source={IMAGES["post"]}
+                    />
+                </View>
+                <Image
+                    style={styles.icon}
+                    source={IMAGES["like"]}
+                />
+                <Text style={{
+                    fontSize: 15,
+                    color: 'black',
+                    marginLeft: 35,
+                    marginBottom: 10,
+                }}>
+                    {feedData.caption}
+                </Text>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                        setModalVisible(!modalVisible);
+                    }}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.headerContainer}>Comments</Text>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={onChangeText}
+                                value={text}
+                                placeholder="Leave a Comment"
+                            />
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => setModalVisible(!modalVisible)}>
+                                <Text style={styles.textStyle}>Close</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </Modal>
+                <Pressable
+                    style={[styles.commentButton, styles.commentButtonOpen]}
+                    onPress={() => setModalVisible(true)}>
+                    <Text style={styles.textStyle}>View comments...</Text>
+                </Pressable>
+            </View>
+
+            <View style={styles.postContainer}>
+                <View style={styles.centerContainer}>
+                    <View style={{
+                        flexDirection: 'row',
+                    }}>
+                        <Image
+                            style={styles.profileImage}
+                            source={IMAGES["styledpfp"]}
+                        />
+                        <Text style={styles.postText}>
+                            <Text style={styles.name}>TeamStyled</Text>
+                        </Text>
+                    </View>
+                    <Image
+                        style={styles.postImage}
+                        source={IMAGES["styledpost"]}
+                    />
+                </View>
+                <Image
+                    style={styles.icon}
+                    source={IMAGES["like"]}
+                />
+                <Text style={{
+                    fontSize: 15,
+                    color: 'black',
+                    marginLeft: 35,
+                    marginBottom: 10,
+                }}>
+                    How to be a sustainable fashion lover – and why it matters: Upcycling, visible mending and organising are among the ways fashionistas are giving their wardrobes a longer life; Bel Jacobs explores how caring for our clothes also means caring for the planet.
+                </Text>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                        setModalVisible(!modalVisible);
+                    }}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.headerContainer}>Comments</Text>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={onChangeText}
+                                value={text}
+                                placeholder="Leave a Comment"
+                            />
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => setModalVisible(!modalVisible)}>
+                                <Text style={styles.textStyle}>Close</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </Modal>
+                <Pressable
+                    style={[styles.commentButton, styles.commentButtonOpen]}
+                    onPress={() => setModalVisible(true)}>
+                    <Text style={styles.textStyle}>View comments...</Text>
+                </Pressable>
+            </View>
+
+            <View style={styles.postContainer}>
+                <View style={styles.centerContainer}>
+                    <View style={styles.postHead}>
+                        <Image
+                            style={styles.profileImage}
+                            source={IMAGES["christiller"]}
+                        />
+                        <Text style={styles.postText}>
+                            <Text style={styles.name}>{feedData.user} posts in {feedData.communityName}</Text>
+                        </Text>
+                    </View>
+                    <Image
+                        style={styles.postImage}
+                        source={IMAGES["post"]}
+                    />
+                </View>
+                <Image
+                    style={styles.icon}
+                    source={IMAGES["like"]}
+                />
+                <Text style={{
+                    fontSize: 15,
+                    color: 'black',
+                    marginLeft: 35,
+                    marginBottom: 10,
+                }}>
+                    {feedData.caption}
+                </Text>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                        setModalVisible(!modalVisible);
+                    }}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.headerContainer}>Comments</Text>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={onChangeText}
+                                value={text}
+                                placeholder="Leave a Comment"
+                            />
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => setModalVisible(!modalVisible)}>
+                                <Text style={styles.textStyle}>Close</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </Modal>
+                <Pressable
+                    style={[styles.commentButton, styles.commentButtonOpen]}
+                    onPress={() => setModalVisible(true)}>
+                    <Text style={styles.textStyle}>View comments...</Text>
+                </Pressable>
+
+            </View>
+
+        </ScrollView >
+    );
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    headerContainer: {
+        alignItems: 'center',
+        padding: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    header: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    postHead: {
+        flexDirection: 'row',
+    },
+    profileImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        marginRight: 15,
+    },
+    name: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+        paddingLeft: 10,
+        marginTop: 30,
+    },
+    username: {
+        fontSize: 16,
+        color: 'grey',
+    },
+    postContainer: {
+        padding: 20,
+    },
+    centerContainer: {
+        alignItems: 'center',
+    },
+    postText: {
+        fontSize: 18,
+        color: 'black',
+    },
+    postImage: {
+        width: 300,
+        height: 300,
+        borderRadius: 20,
+        marginBottom: 10,
+        marginTop: 15,
+    },
+    icon: {
+        width: 30,
+        height: 30,
+        alignItems: 'flex-start',
+        marginLeft: 30,
+        marginBottom: 10,
+    },
+    btnNormal: {
+        borderColor: 'blue',
+        borderWidth: 1,
+        borderRadius: 10,
+        height: 30,
+        width: 100,
+    },
+    btnPress: {
+        borderColor: 'blue',
+        borderWidth: 1,
+        height: 30,
+        width: 100,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    commentButton: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        width: 150,
+        marginLeft: 20,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    commentButtonOpen: {
+        backgroundColor: 'white',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'black',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+    input: {
+        height: 40,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+    }
 });
