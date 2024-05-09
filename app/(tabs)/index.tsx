@@ -79,9 +79,9 @@ export default function TabOneScreen() {
     return (
         <ScrollView style={styles.container}>
 
-            <View style={styles.headerContainer}>
+            {/* <View style={styles.headerContainer}>
                 <Text style={styles.header}>Activity</Text>
-            </View>
+            </View> */}
             <View style={styles.postContainer}>
                 <View style={styles.centerContainer}>
                     <View style={styles.postHead}>
@@ -277,6 +277,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         alignItems: 'center',
         padding: 20,
+        marginTop: 30,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
@@ -306,6 +307,7 @@ const styles = StyleSheet.create({
         color: 'grey',
     },
     postContainer: {
+        marginTop: 30,
         padding: 20,
     },
     centerContainer: {
