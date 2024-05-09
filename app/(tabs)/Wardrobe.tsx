@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, TouchableOpacity, Text, Image, View, StyleSheet, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import ImageGridModal from '@/components/ImageGridModal';
 import { ref, listAll, getDownloadURL } from "firebase/storage";
 import { FirebaseError } from 'firebase/app';
-import { getUserImagesRef } from '@/services/firebaseconfig';  // Assuming this is similar to the method in WardrobeModal
-
-const categories = ['tops', 'outerwear', 'shoes', 'dresses'];
+import { getUserImagesRef } from '@/services/firebaseconfig';
 
 const TabOneScreen = () => {
   const [imageGridVisible, setImageGridVisible] = useState(false);
@@ -58,6 +55,10 @@ const TabOneScreen = () => {
     }
   };
 
+  const handleOutfitsFetch = async () => {
+    handleCategorySelect('outfits');
+  };
+
   const renderCategory = ({ item }) => (
     <TouchableOpacity style={styles.categoryButton} onPress={() => handleCategorySelect(item.category)}>
       <Text style={styles.categoryText}>{item.category}</Text>
@@ -72,6 +73,9 @@ const TabOneScreen = () => {
         renderItem={renderCategory}
         keyExtractor={(item) => item.category}
       />
+      <TouchableOpacity style={styles.specialButton} onPress={handleOutfitsFetch}>
+        <Text style={styles.buttonText}>View Outfits</Text>
+      </TouchableOpacity>
       <ImageGridModal
         visible={imageGridVisible}
         onClose={() => setImageGridVisible(false)}
@@ -105,6 +109,17 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25
+  },
+  specialButton: {
+    padding: 15,
+    marginTop: 20,
+    backgroundColor: '#4CAF50',
+    borderRadius: 10
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold'
   }
 });
 
