@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, View, Text, TouchableOpacity, Image, StyleSheet, FlatList } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, Image, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { ref as storageRef, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 import { FirebaseError } from 'firebase/app';
 import { getUserImagesRef } from '@/services/firebaseconfig';
-import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
 
 interface CreateOutfitModalProps {
   visible: boolean;
@@ -42,8 +41,19 @@ const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose,
   };
 
   const handleSelectItem = (category: string, url: string) => {
-    setSelections(prev => ({ ...prev, [category]: url }));
-  };
+    setSelections(prev => {
+        // Check if the current image is already selected
+        if (prev[category] === url) {
+            // Remove the image from the selection if it is already selected
+            const updatedSelections = { ...prev };
+            delete updatedSelections[category];
+            return updatedSelections;
+        } else {
+            // Otherwise, add the new selection
+            return { ...prev, [category]: url };
+        }
+    });
+};
 
   const handleSaveOutfit = async () => {
     if (outfitPreviewRef.current) {
@@ -75,47 +85,54 @@ const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose,
 
   return (
     <Modal visible={visible} onRequestClose={onClose} animationType="slide" transparent={false}>
-      <View style={styles.modalView}>
-        {categories.map(category => (
-          <View key={category}>
-            <Text style={styles.header}>{category.toUpperCase()}</Text>
-            <FlatList
-              data={categoryImages[category]}
-              renderItem={renderCategoryItems(category)}
-              keyExtractor={(item, idx) => `${category}-${idx}`}
-              horizontal
-            />
-          </View>
-        ))}
-        <View ref={outfitPreviewRef} style={styles.outfitPreview}>
-          {['shoes', 'tops', 'dresses', 'outerwear'].map((category, index) => (
-            selections[category] && (
-              <Image key={category} source={{ uri: selections[category] }} style={[styles.imagePreview, { zIndex: categories.length - index }]} />
-            )
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.modalView}>
+          {categories.map(category => (
+            <View key={category}>
+              <Text style={styles.header}>{category.toUpperCase()}</Text>
+              <FlatList
+                data={categoryImages[category]}
+                renderItem={renderCategoryItems(category)}
+                keyExtractor={(item, idx) => `${category}-${idx}`}
+                horizontal
+              />
+            </View>
           ))}
+          <View ref={outfitPreviewRef} style={styles.outfitPreview}>
+            {['shoes', 'tops', 'dresses', 'outerwear'].map((category, index) => (
+              selections[category] && (
+                <Image key={category} source={{ uri: selections[category] }} style={[styles.imagePreview, { zIndex: categories.length - index }]} />
+              )
+            ))}
+          </View>
+          <TouchableOpacity style={styles.button} onPress={handleSaveOutfit}>
+            <Text style={styles.buttonText}>Save Outfit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={onClose}>
+            <Text style={styles.buttonText}>Close</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleSaveOutfit}>
-          <Text style={styles.buttonText}>Save Outfit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onClose}>
-          <Text style={styles.buttonText}>Close</Text>
-        </TouchableOpacity>
-      </View>
-      
+      </ScrollView>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    marginTop: 30,
+    flex: 1,
+  },
   modalView: {
     flex: 1,
     padding: 20,
     backgroundColor: 'white',
   },
   outfitPreview: {
-    width: 300,
-    height: 300,
-    position: 'relative',
+    flexDirection: 'row',
+    width: '100%',
+    height: 150,
+    justifyContent: 'space-around',
+    alignItems: 'center',
     marginBottom: 20,
   },
   imageThumbnail: {
@@ -140,10 +157,9 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   imagePreview: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
   }
 });
 
