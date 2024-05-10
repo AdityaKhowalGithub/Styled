@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, View, StyleSheet, TouchableOpacity, FlatList, Image, Text } from 'react-native';
 
 interface ImageGridModalProps {
@@ -8,6 +8,14 @@ interface ImageGridModalProps {
 }
 
 const ImageGridModal: React.FC<ImageGridModalProps> = ({ visible, onClose, images }) => {
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const [zoomVisible, setZoomVisible] = useState(false);
+
+  const handleImagePress = (url: string) => {
+    setZoomedImage(url);
+    setZoomVisible(true);
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -20,7 +28,9 @@ const ImageGridModal: React.FC<ImageGridModalProps> = ({ visible, onClose, image
         <FlatList
           data={images}
           renderItem={({ item }) => (
-            <Image style={styles.image} source={{ uri: item }} />
+            <TouchableOpacity onPress={() => handleImagePress(item)}>
+              <Image style={styles.image} source={{ uri: item }} />
+            </TouchableOpacity>
           )}
           numColumns={3} // Adjust number of columns here
           keyExtractor={(_, index) => index.toString()}
@@ -29,6 +39,14 @@ const ImageGridModal: React.FC<ImageGridModalProps> = ({ visible, onClose, image
           <Text style={styles.textStyle}>Close</Text>
         </TouchableOpacity>
       </View>
+      {zoomVisible && (
+        <View style={styles.zoomContainer}>
+          <TouchableOpacity style={styles.closeZoom} onPress={() => setZoomVisible(false)}>
+            <Text style={styles.textStyle}>Close Zoom</Text>
+          </TouchableOpacity>
+          <Image style={styles.zoomedImage} source={{ uri: zoomedImage }} />
+        </View>
+      )}
     </Modal>
   );
 };
@@ -59,6 +77,29 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold'
+  },
+  zoomContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeZoom: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    backgroundColor: '#ff4444',
+    padding: 8,
+    borderRadius: 5,
+  },
+  zoomedImage: {
+    width: '90%',
+    height: '80%',
+    resizeMode: 'contain'
   }
 });
 
