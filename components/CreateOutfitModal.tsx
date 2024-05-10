@@ -42,18 +42,15 @@ const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose,
 
   const handleSelectItem = (category: string, url: string) => {
     setSelections(prev => {
-        // Check if the current image is already selected
         if (prev[category] === url) {
-            // Remove the image from the selection if it is already selected
             const updatedSelections = { ...prev };
             delete updatedSelections[category];
             return updatedSelections;
         } else {
-            // Otherwise, add the new selection
             return { ...prev, [category]: url };
         }
     });
-};
+  };
 
   const handleSaveOutfit = async () => {
     if (outfitPreviewRef.current) {
@@ -61,7 +58,6 @@ const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose,
         format: 'jpg',
         quality: 0.8,
       });
-
       const blob = await (await fetch(uri)).blob();
       const userImagesRef = getUserImagesRef();
       const outfitRef = storageRef(userImagesRef, `clothes/outfits/${Date.now()}.jpg`);
@@ -69,7 +65,7 @@ const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose,
       uploadBytes(outfitRef, blob).then(snapshot => {
         getDownloadURL(snapshot.ref).then(url => {
           console.log('Saved outfit URL:', url);
-          onClose();  // Close modal after saving
+          onClose();  // Optionally close the modal after saving
         });
       }).catch(error => {
         console.error('Upload error:', error);
@@ -119,7 +115,6 @@ const CreateOutfitModal: React.FC<CreateOutfitModalProps> = ({ visible, onClose,
 
 const styles = StyleSheet.create({
   scrollView: {
-    marginTop: 30,
     flex: 1,
   },
   modalView: {
@@ -129,8 +124,9 @@ const styles = StyleSheet.create({
   },
   outfitPreview: {
     flexDirection: 'row',
-    width: '100%',
-    height: 150,
+    flexWrap: 'wrap',
+    width: 200,
+    height: 200,
     justifyContent: 'space-around',
     alignItems: 'center',
     marginBottom: 20,
@@ -157,9 +153,10 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   imagePreview: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
+    width: 90,
+    height: 90,
+    resizeMode: 'cover',
+    margin: 5,
   }
 });
 
