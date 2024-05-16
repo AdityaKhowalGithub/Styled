@@ -1,4 +1,3 @@
-// WardrobeStats.tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
@@ -32,11 +31,11 @@ const WardrobeStats = () => {
         const categoryDoc = doc(firestore, `users/${user.uid}/clothes/${category}`);
         const categorySnapshotFirestore = await getDoc(categoryDoc);
         if (categorySnapshotFirestore.exists()) {
-          const filePath = categorySnapshotFirestore.data().filePath;
+          const filePath = categorySnapshotFirestore.data().filePath || {};
           Object.values(filePath).forEach(value => {
-            if (value === 'thrifted') {
+            if (value === 'thrift') {
               totalThrifted += 1;
-            } else if (value === 'gifted') {
+            } else if (value === 'gift') {
               totalGifted += 1;
             } else if (value === 'bought') {
               totalShopped += 1;
@@ -44,6 +43,11 @@ const WardrobeStats = () => {
           });
         }
       }
+
+      console.log('Total Items:', totalItems);
+      console.log('Total Thrifted:', totalThrifted);
+      console.log('Total Gifted:', totalGifted);
+      console.log('Total Bought:', totalShopped);
 
       // Fetching number of outfits
       const outfitsRef = ref(storage, `images/${user.uid}/clothes/outfits`);
