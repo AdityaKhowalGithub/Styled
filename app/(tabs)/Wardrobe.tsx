@@ -6,6 +6,7 @@ import { FirebaseError } from 'firebase/app';
 import { getUserImagesRef } from '@/services/firebaseconfig';
 import CreateOutfitModal from '@/components/CreateOutfitModal';
 const categories = ['tops', 'outerwear', 'shoes', 'dresses'];
+import WardrobeStats from '@/components/WardrobeStats';
 
 const TabOneScreen = () => {
   const [imageGridVisible, setImageGridVisible] = useState(false);
@@ -71,6 +72,7 @@ const TabOneScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+       <WardrobeStats />
       <FlatList
         data={categoryPreviews}
         renderItem={renderCategory}
@@ -99,6 +101,7 @@ const TabOneScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center'
   },
