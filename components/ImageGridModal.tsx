@@ -28,33 +28,24 @@ const ImageGridModal: React.FC<ImageGridModalProps> = ({ visible, onClose, image
     const categories = ['dresses', 'outerwear', 'tops', 'shoes'];
     let found = false;
 
-    // Extract the file name from the URL without query parameters
+    // Extract and decode the file name from the URL without query parameters
     const fileNameWithQuery = url.substring(url.lastIndexOf('/') + 1);
-    const fileName = fileNameWithQuery.split('?')[0];
-    console.log("Extracted File Name:", fileName); // Log the extracted file name
+    const fileName = decodeURIComponent(fileNameWithQuery.split('?')[0]);
+    const nameName = fileName.split('/').pop();
+    //console.log("namename", nameName);
+    //console.log("Extracted File Name:", fileName); // Log the extracted file name
 
     for (const category of categories) {
       const categoryDoc = doc(firestore, `users/${user.uid}/clothes/${category}`);
       const categorySnapshot = await getDoc(categoryDoc);
       if (categorySnapshot.exists()) {
         const filePath = categorySnapshot.data().filePath;
-      
         console.log("file path:", filePath);  
         console.log("File Name:", fileName); // Log the file name
-        const fileNameWithoutQuery = fileName.split('%2F').pop();
-        console.log("filename without query:", fileNameWithoutQuery);
-        if (fileNameWithoutQuery && filePath[fileNameWithoutQuery]) {
-          console.log(filePath[fileNameWithoutQuery]);
-          setSustainabilityScore(filePath[fileNameWithoutQuery]);
-          console.log("Sustainability Score:", filePath[fileNameWithoutQuery]); // log the sustainability score
-          found = true;
-          break;
-        }
-        
-
-        if (filePath[fileName]) {
-          setSustainabilityScore(filePath[fileName]);
-          console.log("Sustainability Score:", filePath[fileName]); // Log the sustainability score
+        console.log(fileNameWithQuery);
+        if (nameName && filePath[nameName]) {
+          setSustainabilityScore(filePath[nameName]);
+          console.log("Sustainability Score:", filePath[nameName]); // Log the sustainability score
           found = true;
           break;
         }
@@ -68,9 +59,9 @@ const ImageGridModal: React.FC<ImageGridModalProps> = ({ visible, onClose, image
   };
 
   const getSustainabilityIcon = (score: string | null) => {
-    if (score === 'thrifted') {
+    if (score === 'thrift') {
       return <Icon name="smile-o" size={50} color="green" />;
-    } else if (score === 'gifted') {
+    } else if (score === 'gift') {
       return <Icon name="meh-o" size={50} color="orange" />;
     } else if (score === 'bought') {
       return <Icon name="frown-o" size={50} color="red" />;
