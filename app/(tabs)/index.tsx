@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableHighlight, Alert, Button, Modal, Pressable, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableHighlight, Alert, Button, Modal, Pressable, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { AuthStore } from "../../store";
 import { useRouter, useSegments } from "expo-router";
 
@@ -17,6 +17,8 @@ export default function TabOneScreen() {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [text, onChangeText] = useState('');
+    
+    const [guideVisible, setGuideVisible] = useState(false);
 
     const [isPress, setIsPress] = useState(false);
 
@@ -27,6 +29,9 @@ export default function TabOneScreen() {
         "like": require("@/assets/images/like.png"),
         "styledpfp": require("@/assets/images/styledpfp.png"),
         "styledpost": require("@/assets/images/styledpost.jpg"),
+        "article1" : require("@/assets/images/article1.png"),
+        "article3" : require("@/assets/images/article3.png"),
+        "clock" : require("@/assets/images/clock.png")
     };
 
     const touchProps = {
@@ -79,9 +84,130 @@ export default function TabOneScreen() {
     return (
         <ScrollView style={styles.container}>
 
-            {/* <View style={styles.headerContainer}>
+            <View style={styles.headerContainer}>
                 <Text style={styles.header}>Activity</Text>
-            </View> */}
+            </View>
+            <Modal
+                animationType="slide"
+                transparent={false}
+                visible={guideVisible}
+                onRequestClose={() => {
+                setGuideVisible(!guideVisible);
+                }}>
+                <View style={styles.centeredView}>
+                <View style={styles.guideView}>
+
+                    
+                    <ScrollView>
+                        
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.header}>Guide</Text>
+                    </View>
+                    <Text style={styles.name}>Recommended</Text>
+                    <View style={styles.postContainer}>
+                        <View style={styles.centerContainer}>
+                            <View style={{
+                                flexDirection: 'column',
+                            }}>
+                                <Text style={{color: 'red'}}>New Article</Text>
+                                <Text style={styles.postText}>
+                                    <Text style={styles.name}>A List Of The Worst Fast Fashion Brands To Avoid & Why (2024)</Text>
+                                </Text>
+                            </View>
+                            <Image
+                                style={styles.postImage}
+                                source={IMAGES["article1"]}
+                            />
+                        </View>
+                        <View style={{
+                                flexDirection: 'row',
+                            }}>
+                        <Image
+                            style={styles.icon}
+                            source={IMAGES["clock"]}
+                        />
+                        <Text>6 min read</Text>
+                        </View>
+                    </View>
+                    <View style={styles.postContainer}>
+                        <View style={styles.centerContainer}>
+                            <View style={{
+                                flexDirection: 'column',
+                            }}>
+                                
+                                <Text style={styles.postText}>
+                                    <Text style={styles.name}>Op-Ed: What to do about the fashion in the room?</Text>
+                                </Text>
+                            </View>
+                        <Text style={{
+                            fontSize: 15,
+                            color: 'black',
+                            marginLeft: 35,
+                            marginBottom: 10,
+                        }}>
+                            Explore the environmental footprint of fashion and climate change, revealing insights on textile industry pollution and offering practical tips for conscious consumer choices.
+                        </Text>    
+                        </View>
+                        <View style={{
+                                flexDirection: 'row',
+                            }}>
+                        <Image
+                            style={styles.icon}
+                            source={IMAGES["clock"]}
+                        />
+                        <Text>2 min read</Text>
+                        </View>
+                    </View>
+                    <View style={styles.postContainer}>
+                        <View style={styles.centerContainer}>
+                            <View style={{
+                                flexDirection: 'column',
+                            }}>
+                                <Image
+                                style={styles.postImage}
+                                source={IMAGES["article3"]}
+                                />
+                                <Text style={styles.postText}>
+                                    <Text style={styles.name}>How to be a sustainable fashion lover - and why it matters</Text>
+                                </Text>
+
+                            </View>
+                            <Text style={{
+                                fontSize: 15,
+                                color: 'black',
+                                marginLeft: 35,
+                                marginBottom: 10,
+                            }}>
+                                Upcycling, visible mending and organising are among the ways fashionistas are giving their wardrobes a longer life; Bel Jacobs explores how caring for our clothes also means caring for the planet.
+                            </Text>    
+                        </View>
+                        <View style={{
+                                flexDirection: 'row',
+                            }}>
+                        <Image
+                            style={styles.icon}
+                            source={IMAGES["clock"]}
+                        />
+                        <Text>Long read</Text>
+                        </View>
+                    </View>
+                    
+                    </ScrollView>
+
+                    
+                    <TouchableHighlight
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setGuideVisible(!guideVisible)}>
+                    <Text style={styles.textStyle}>Go Back to Activity</Text>
+                    </TouchableHighlight>
+                </View>
+                </View>
+            </Modal>
+            <Pressable
+                style={[styles.button, styles.buttonOpen]}
+                onPress={() => setGuideVisible(true)}>
+                <Text style={styles.textStyle}>Guide</Text>
+            </Pressable>
             <View style={styles.postContainer}>
                 <View style={styles.centerContainer}>
                     <View style={styles.postHead}>
@@ -90,7 +216,7 @@ export default function TabOneScreen() {
                             source={IMAGES["christiller"]}
                         />
                         <Text style={styles.postText}>
-                            <Text style={styles.name}>{feedData.user} posts in {feedData.communityName}</Text>
+                            <Text style={styles.name}>Chris Tiller posts in Seattle Vintage Collect</Text>
                         </Text>
                     </View>
                     <Image
@@ -212,7 +338,7 @@ export default function TabOneScreen() {
                             source={IMAGES["christiller"]}
                         />
                         <Text style={styles.postText}>
-                            <Text style={styles.name}>{feedData.user} posts in {feedData.communityName}</Text>
+                            <Text style={styles.name}>Chris Tiller posts in Seattle Vintage Collect</Text>
                         </Text>
                     </View>
                     <Image
@@ -252,7 +378,7 @@ export default function TabOneScreen() {
                             <Pressable
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={() => setModalVisible(!modalVisible)}>
-                                <Text style={styles.textStyle}>Close</Text>
+                                <Text style={styles.header}>Close</Text>
                             </Pressable>
                         </View>
                     </View>
@@ -330,6 +456,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         marginLeft: 30,
         marginBottom: 10,
+        marginRight: 10,
     },
     btnNormal: {
         borderColor: 'blue',
@@ -378,7 +505,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
     },
     buttonOpen: {
-        backgroundColor: '#F194FF',
+        backgroundColor: 'white',
     },
     commentButtonOpen: {
         backgroundColor: 'white',
@@ -400,5 +527,39 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 1,
         padding: 10,
-    }
+    },
+    articleContainer: {
+        flexDirection: 'row',
+        padding: 10,
+        marginHorizontal: 10,
+        marginBottom: 10,
+        backgroundColor: '#f9f9f9',
+        borderRadius: 8,
+    },
+    articleImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 8,
+        marginRight: 10,
+    },
+    articleContent: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    articleTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    readTime: {
+        marginTop: 5,
+        color: '#666',
+        fontSize: 14,
+    },
+    guideView: {
+        margin: 1,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+      },
 });
