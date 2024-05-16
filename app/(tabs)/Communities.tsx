@@ -66,6 +66,51 @@ const CommunitiesScreen = ({}) => {
 			<View style={styles.headerContainer}>
 				<Text style={styles.categories}>Communities for you</Text>
 			</View>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={createVisible}
+        onRequestClose={() => {
+          setCreateVisible(!createVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+
+            
+            <ScrollView>
+              <View style={styles.container}>
+                <Text style={styles.title}>Create a community</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="What is the name of your community?"
+                />
+    
+                <TextInput
+                  style={styles.input}
+                  placeholder="Describe your community in one sentence."                     
+                  multiline
+                />
+                <Button
+                  title="Create Community"
+                  onPress={() => Alert.alert('Community created!')}
+                />
+              </View>
+            </ScrollView>
+
+            
+            <TouchableHighlight
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setCreateVisible(!createVisible)}>
+              <Text style={styles.textStyle}>Close</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </Modal>
+      <Pressable
+        style={{marginLeft: 20, marginTop: 15}}
+        onPress={() => setCreateVisible(true)}>
+        <Text>+ Create a Community</Text>
+      </Pressable>
       <View style={styles.communityContainer}>
         <View style={styles.communityHead}>
           <Image
@@ -269,51 +314,7 @@ const CommunitiesScreen = ({}) => {
         </Text>
         <Text style={styles.postText}>{communityData.communityBio}</Text>	
       </View>
-      <Modal
-            animationType="slide"
-            transparent={false}
-            visible={communityVisible}
-            onRequestClose={() => {
-              setCreateVisible(!createVisible);
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-
-                
-                <ScrollView>
-                  <View style={styles.container}>
-                    <Text style={styles.title}>Create a community</Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="What is the name of your community?"
-                    />
-        
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Describe your community in one sentence."                     
-                      multiline
-                    />
-                    <Button
-                      title="Create Community"
-                      onPress={() => Alert.alert('Community created!')}
-                    />
-                  </View>
-                </ScrollView>
-
-                
-                <TouchableHighlight
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setCreateVisible(!createVisible)}>
-                  <Text style={styles.textStyle}>Close</Text>
-                </TouchableHighlight>
-              </View>
-            </View>
-          </Modal>
-          <Pressable
-            style={[styles.button]}
-            onPress={() => setCreateVisible(true)}>
-            <Text style={styles.textStyle}>Create a Community</Text>
-          </Pressable>
+      
     </ScrollView>
   );
 };
@@ -474,8 +475,7 @@ const styles = StyleSheet.create({
   },
   privacyText: {
     fontSize: 16,
-  }
-	
+  },
 });
 
 export default CommunitiesScreen;
