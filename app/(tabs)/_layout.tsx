@@ -43,6 +43,10 @@ export default function TabLayout() {
               tabBarActiveTintColor: "#00321F", // Highlight color for the active tab
               tabBarInactiveTintColor: "#717B77", // Color for inactive tabs
               tabBarStyle: {
+
+                    borderTopWidth: 1,
+                    borderTopColor: "#E5E5E5",
+
                   backgroundColor: "#FFFFFF", // Background color of the navigation bar
               },
               tabBarShowLabel: !shouldHideLabels, // Dynamically show/hide labels based on width

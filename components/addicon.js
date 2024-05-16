@@ -19,7 +19,8 @@ import { View } from 'react-native';
 import Svg, { Rect, Path, Circle } from 'react-native-svg';
 
 const AddIcon = () => (
-    <View style={{ paddingTop: 10 }}>
+    <View style={{ paddingTop: 15 }}>
+
         <Svg width="51" height="50" viewBox="0 0 51 50" fill="none">
             <Rect x="5.5" y="5" width="40" height="40" rx="9" fill= "#00321F" />
             <Path d="M12.5 22C12.5 12 12.5 12 22.5 12" stroke="white" strokeWidth="2" strokeLinecap="round" />
