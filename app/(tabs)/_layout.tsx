@@ -6,6 +6,9 @@ import {
 import { Tabs } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Text } from "react-native";
+import { Home2 } from 'iconsax-react-native';
+import { PeopleCommunityRegular, PeopleCommunityFilled } from "@fluentui/react-native-icons";
+import Addicon from "@/components/addicon";
 
 function useWindowDimensions() {
   const [windowDimensions, setWindowDimensions] = useState(
@@ -37,10 +40,10 @@ export default function TabLayout() {
       <Tabs
           screenOptions={{
               headerShown: false, // Hide the header
-              tabBarActiveTintColor: "#684440", // Highlight color for the active tab
-              tabBarInactiveTintColor: "#837B82", // Color for inactive tabs
+              tabBarActiveTintColor: "#00321F", // Highlight color for the active tab
+              tabBarInactiveTintColor: "#717B77", // Color for inactive tabs
               tabBarStyle: {
-                  backgroundColor: "#FFF8ED", // Background color of the navigation bar
+                  backgroundColor: "#FFFFFF", // Background color of the navigation bar
               },
               tabBarShowLabel: !shouldHideLabels, // Dynamically show/hide labels based on width
               
@@ -51,11 +54,7 @@ export default function TabLayout() {
               options={{
                   title: "Home",
                   tabBarIcon: ({ focused, color }) => (
-                      <MaterialCommunityIcons
-                          name={focused ? "home" : "home-outline"}
-                          size={30}
-                          color={color}
-                      />
+                    <Home2 size={24} color={color} variant={focused ? "Bold" : "Outline"} />
                   ),
               }}
           />
@@ -76,12 +75,7 @@ export default function TabLayout() {
               name="add"
               options={{
                   tabBarIcon: ({ focused, color }) => (
-                      <AntDesign
-                          name={focused ? "pluscircle" : "pluscircleo"}
-                          size={34}
-                          style={{ marginTop: 2 }}
-                          color={color}
-                      />
+                    <Addicon/>
                   ),
                   tabBarLabel: () => {
                       return <Text style={{ fontSize: 0 }}></Text>;
@@ -113,7 +107,7 @@ export default function TabLayout() {
                       />
                   ),
               }}
-          /> 
+          />
       </Tabs>
 
   );
