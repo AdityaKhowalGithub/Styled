@@ -32,8 +32,7 @@ const ImageGridModal: React.FC<ImageGridModalProps> = ({ visible, onClose, image
     const fileNameWithQuery = url.substring(url.lastIndexOf('/') + 1);
     const fileName = decodeURIComponent(fileNameWithQuery.split('?')[0]);
     const nameName = fileName.split('/').pop();
-    //console.log("namename", nameName);
-    //console.log("Extracted File Name:", fileName); // Log the extracted file name
+    console.log("Extracted File Name:", fileName); // Log the extracted file name
 
     for (const category of categories) {
       const categoryDoc = doc(firestore, `users/${user.uid}/clothes/${category}`);
@@ -80,6 +79,14 @@ const ImageGridModal: React.FC<ImageGridModalProps> = ({ visible, onClose, image
     return 'Sustainability: Unknown';
   };
 
+  const handleCloseZoom = () => {
+    console.log("Close Zoom button pressed");
+    setZoomVisible((prev) => {
+      console.log("Previous Zoom Visible State:", prev); // Log previous zoomVisible state
+      return false;
+    });
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -105,7 +112,7 @@ const ImageGridModal: React.FC<ImageGridModalProps> = ({ visible, onClose, image
       </View>
       {zoomVisible && (
         <View style={styles.zoomContainer}>
-          <TouchableOpacity style={styles.closeZoom} onPress={() => setZoomVisible(false)}>
+          <TouchableOpacity style={styles.closeZoom} onPress={handleCloseZoom}>
             <Text style={styles.textStyle}>Close Zoom</Text>
           </TouchableOpacity>
           <Image style={styles.zoomedImage} source={{ uri: zoomedImage }} />
@@ -165,6 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ff4444',
     padding: 8,
     borderRadius: 5,
+    zIndex: 1,
   },
   zoomedImage: {
     width: '90%',
