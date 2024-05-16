@@ -81,11 +81,12 @@ const TabOneScreen = () => {
       <TouchableOpacity style={styles.specialButton} onPress={handleOutfitsFetch}>
         <Text style={styles.buttonText}>View Outfits</Text>
       </TouchableOpacity>
-      <ImageGridModal
+      {/* <ImageGridModal
         visible={imageGridVisible}
         onClose={() => setImageGridVisible(false)}
         images={selectedImages}
-      />
+      /> */}
+        <ImageGridModal visible={imageGridVisible} onClose={() => setImageGridVisible(false)} images={selectedImages} />
       <TouchableOpacity style={styles.specialButton} onPress={() => setCreateOutfitVisible(true)}>
         <Text style={styles.buttonText}>Create an Outfit</Text>
       </TouchableOpacity>
