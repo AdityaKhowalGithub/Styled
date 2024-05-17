@@ -1,7 +1,7 @@
 import Colors from '@/constants/Colors';
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableHighlight, TextInput, Alert, Modal, Pressable } from 'react-native';
-import UploadImage from '@/components/UploadImage'
+import { View, Switch, TouchableOpacity, Text, Button, StyleSheet, Image, ScrollView, TouchableHighlight, TextInput, Alert, Modal, Pressable } from 'react-native';
+import CreateCommunities from '@/components/CreateCommunities';
 
 const CommunitiesScreen = ({}) => {
 	
@@ -21,12 +21,16 @@ const CommunitiesScreen = ({}) => {
 
   const IMAGES: {[key: string]: any} = {
     "seattlevintage": require("@/assets/images/seattlevintagepfp.png"),
+    "minimalists": require("@/assets/images/minimalists.png"),
+    "y2kmix": require("@/assets/images/y2kmix.png"),
+    "behind": require("@/assets/images/behindtheclosetdoor.png"),
     "christiller": require("@/assets/images/christillerpfp.png"),
     "post": require("@/assets/images/postpic.png")
   }
 
 	const [communityVisible, setCommunityVisible] = useState(false);
   const [postVisible, setPostVisible] = useState(false);
+  const [createVisible, setCreateVisible] = useState(false);
 
   const [text, onChangeText] = React.useState('');
 	
@@ -62,6 +66,51 @@ const CommunitiesScreen = ({}) => {
 			<View style={styles.headerContainer}>
 				<Text style={styles.categories}>Communities for you</Text>
 			</View>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={createVisible}
+        onRequestClose={() => {
+          setCreateVisible(!createVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+
+            
+            <ScrollView>
+              <View style={styles.container}>
+                <Text style={styles.title}>Create a community</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="What is the name of your community?"
+                />
+    
+                <TextInput
+                  style={styles.input}
+                  placeholder="Describe your community in one sentence."                     
+                  multiline
+                />
+                <Button
+                  title="Create Community"
+                  onPress={() => Alert.alert('Community created!')}
+                />
+              </View>
+            </ScrollView>
+
+            
+            <TouchableHighlight
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setCreateVisible(!createVisible)}>
+              <Text style={styles.textStyle}>Close</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </Modal>
+      <Pressable
+        style={{marginLeft: 20, marginTop: 15}}
+        onPress={() => setCreateVisible(true)}>
+        <Text>+ Create a Community</Text>
+      </Pressable>
       <View style={styles.communityContainer}>
         <View style={styles.communityHead}>
           <Image
@@ -158,10 +207,10 @@ const CommunitiesScreen = ({}) => {
         <View style={styles.communityHead}>
           <Image
           style={styles.profileImage}
-          source={ IMAGES["seattlevintage"] }
+          source={ IMAGES["minimalists"] }
           />
           <Text style={styles.postText}>
-            <Text style={styles.name}>{communityData.communityName}</Text>
+            <Text style={styles.name}>Minimalists Collections</Text>
           </Text>
           <Pressable
             style={[styles.joinButton, styles.buttonOpen]}
@@ -182,10 +231,10 @@ const CommunitiesScreen = ({}) => {
         <View style={styles.communityHead}>
           <Image
           style={styles.profileImage}
-          source={ IMAGES["seattlevintage"] }
+          source={ IMAGES["y2kmix"] }
           />
           <Text style={styles.postText}>
-            <Text style={styles.name}>{communityData.communityName}</Text>
+            <Text style={styles.name}>Y2k Mix Social Group:D</Text>
           </Text>
           <Pressable
             style={[styles.joinButton, styles.buttonOpen]}
@@ -203,10 +252,10 @@ const CommunitiesScreen = ({}) => {
         <View style={styles.communityHead}>
           <Image
           style={styles.profileImage}
-          source={ IMAGES["seattlevintage"] }
+          source={ IMAGES["behind"] }
           />
           <Text style={styles.postText}>
-            <Text style={styles.name}>{communityData.communityName}</Text>
+            <Text style={styles.name}>Behind the Closet Door</Text>
           </Text>
           <Pressable
             style={[styles.joinButton, styles.buttonOpen]}
@@ -251,7 +300,7 @@ const CommunitiesScreen = ({}) => {
           source={ IMAGES["seattlevintage"] }
           />
           <Text style={styles.postText}>
-            <Text style={styles.name}>{communityData.communityName}</Text>
+            <Text style={styles.name}>Seattle Vintage Collect</Text>
           </Text>
           <Pressable
             style={[styles.joinButton, styles.buttonOpen]}
@@ -265,7 +314,7 @@ const CommunitiesScreen = ({}) => {
         </Text>
         <Text style={styles.postText}>{communityData.communityBio}</Text>	
       </View>
-
+      
     </ScrollView>
   );
 };
@@ -384,6 +433,12 @@ const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: '#2196F3',
   },
+  specialButton: {
+    padding: 15,
+    marginTop: 20,
+    backgroundColor: '#4CAF50',
+    borderRadius: 10
+  },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
@@ -405,8 +460,22 @@ const styles = StyleSheet.create({
   },
   spacer: {
     paddingBottom: 20,
-  }
-	
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  privacyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginVertical: 12,
+  },
+  privacyText: {
+    fontSize: 16,
+  },
 });
 
 export default CommunitiesScreen;
