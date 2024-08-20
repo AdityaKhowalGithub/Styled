@@ -1,6 +1,6 @@
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#welcome-to-your-expo-app-)
 
-# ➤ Welcome to Your Expo App 🎉👋
+# ➤ Welcome to STYLED App 🎉👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app). This project serves as a foundation for developing cross-platform applications with ease and efficiency. 🚀
 
